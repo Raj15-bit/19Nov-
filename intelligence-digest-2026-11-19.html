@@ -1,0 +1,1113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intelligence Digest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+
+<style>
+:root{
+  --paper:#EDEFF2; --surface:#FFFFFF; --surface-2:#F5F7F9;
+  --ink:#12171D; --ink-soft:#39434E; --muted:#5F6B78;
+  --rule:#D3D9E1; --rule-soft:#E3E7EC;
+  --signal:#0C6E5F; --signal-soft:#DDEEEA;
+  --flag:#A8331C; --flag-soft:#F7E4DF;
+  --ochre:#8A6510; --ochre-soft:#F5ECD7;
+  --brand:#DB1512; --brand-soft:#FBE7E4;
+  --shadow:0 1px 2px rgba(18,23,29,.06),0 8px 24px rgba(18,23,29,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1215; --surface:#141B20; --surface-2:#1A2229;
+    --ink:#E7EBEA; --ink-soft:#C1CACB; --muted:#8D9AA0;
+    --rule:#26313A; --rule-soft:#1E272E;
+    --signal:#4CC4AC; --signal-soft:#12312C;
+    --flag:#E08571; --flag-soft:#331913;
+    --ochre:#D8AC50; --ochre-soft:#2E2513;
+    --brand:#F0463F; --brand-soft:#2A1210;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1215; --surface:#141B20; --surface-2:#1A2229;
+  --ink:#E7EBEA; --ink-soft:#C1CACB; --muted:#8D9AA0;
+  --rule:#26313A; --rule-soft:#1E272E;
+  --signal:#4CC4AC; --signal-soft:#12312C;
+  --flag:#E08571; --flag-soft:#331913;
+  --ochre:#D8AC50; --ochre-soft:#2E2513;
+  --brand:#F0463F; --brand-soft:#2A1210;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,serif;font-size:17.5px;line-height:1.72;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px 110px}
+h1,h2,h3,h4,.eyebrow,.num,th,.tag{font-family:Archivo,"Helvetica Neue",Arial,sans-serif}
+.mono,.dnum,td.n,.tag{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  font-variant-numeric:tabular-nums}
+
+.brand{display:flex;align-items:center;gap:20px;padding:34px 0 26px;border-bottom:1px solid var(--rule)}
+.brand .id{display:flex;align-items:center;gap:20px;flex:1 1 auto;min-width:0}
+.brand img{width:104px;height:auto;flex:0 0 auto;display:block}
+.brand .pub{font-family:Archivo,sans-serif;font-weight:700;font-size:clamp(26px,3.4vw,36px);
+  letter-spacing:-.022em;margin:0;line-height:1.05;color:var(--ink)}
+.brand .pubsub{margin:7px 0 0;font-size:15.5px;color:var(--muted);display:flex;align-items:center;gap:9px}
+.brand .tri{color:var(--brand);font-size:12px;line-height:1}
+@media(max-width:560px){.brand{gap:14px}.brand .id{gap:14px}.brand img{width:74px}}
+
+/* theme switch */
+.themetog{flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+  background:var(--surface);color:var(--ink-soft);border:1px solid var(--rule);
+  border-radius:999px;padding:8px 15px 8px 12px;font-family:Archivo,sans-serif;
+  font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  transition:border-color .15s ease,color .15s ease,background .15s ease}
+.themetog:hover{border-color:var(--signal);color:var(--ink)}
+.themetog:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.themetog svg{width:16px;height:16px;display:block;flex:0 0 auto}
+.themetog .ico-sun{display:none}
+.themetog .ico-moon{display:block}
+.themetog[data-mode="dark"] .ico-sun{display:block}
+.themetog[data-mode="dark"] .ico-moon{display:none}
+.themetog .lbl-dark{display:inline}
+.themetog .lbl-light{display:none}
+.themetog[data-mode="dark"] .lbl-dark{display:none}
+.themetog[data-mode="dark"] .lbl-light{display:inline}
+@media(max-width:640px){.themetog .lbl-dark,.themetog .lbl-light{display:none!important}
+  .themetog{padding:9px;border-radius:50%}}
+
+.mast{padding:42px 0 34px;border-bottom:2px solid var(--ink);display:flex;flex-direction:column;gap:20px}
+.mast .eyebrow{font-size:12px;letter-spacing:.17em;text-transform:uppercase;color:var(--signal);font-weight:600}
+.mast h1{font-size:clamp(38px,6vw,66px);line-height:1.03;margin:0;font-weight:700;
+  letter-spacing:-.023em;text-wrap:balance;max-width:20ch}
+.mast .sub{font-size:20px;color:var(--ink-soft);margin:0}
+
+section{padding:56px 0;border-bottom:1px solid var(--rule-soft)}
+.sec-head{display:flex;gap:18px;align-items:baseline;margin-bottom:12px}
+.sec-head .num{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--signal);
+  font-weight:600;padding-top:7px;flex:0 0 auto}
+.sec-head h2{font-size:clamp(26px,3.6vw,37px);margin:0;font-weight:700;
+  letter-spacing:-.019em;text-wrap:balance}
+.deck{color:var(--muted);font-size:18px;margin:0 0 32px 48px}
+@media(max-width:620px){.deck{margin-left:0}}
+.body{max-width:none}
+/* text column sits 15% narrower than the container; tables and panels stay full width */
+.body > p, .body > h3, .read, .plain, .deck, .mast .sub{max-width:85%}
+@media(max-width:900px){.body > p, .body > h3, .read, .plain, .deck, .mast .sub{max-width:none}}
+.body h3{font-size:22px;font-weight:700;margin:38px 0 14px;letter-spacing:-.014em;text-wrap:balance}
+.body h3:first-child{margin-top:0}
+p{margin:0 0 18px}
+strong{font-weight:600}
+a{color:var(--signal);text-underline-offset:2px}
+a:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+
+.read{border-left:3px solid var(--signal);background:var(--signal-soft);
+  padding:18px 24px;margin:24px 0 26px;font-size:17px}
+.read .lb{display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--signal);font-weight:700;margin-bottom:7px;font-family:Archivo,sans-serif}
+.read p:last-child{margin-bottom:0}
+
+.plain{border:1px solid var(--rule);background:var(--surface-2);
+  padding:18px 24px;margin:24px 0 26px;font-size:16.5px;color:var(--ink-soft)}
+.plain .lb{display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);font-weight:700;margin-bottom:7px;font-family:Archivo,sans-serif}
+.plain p:last-child{margin-bottom:0}
+
+.pullnum{display:flex;flex-wrap:wrap;border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);margin:30px 0}
+.pn{flex:1 1 220px;padding:18px 24px 16px 0;margin-right:24px;border-right:1px solid var(--rule-soft)}
+.pn:last-child{border-right:none;margin-right:0}
+.dnum{font-size:25px;font-weight:600;display:block;line-height:1.15;color:var(--ink)}
+.dlab{font-size:15px;color:var(--muted);display:block;margin-top:5px;line-height:1.45}
+
+.tension{border:1px solid var(--rule);background:var(--surface);margin:28px 0;box-shadow:var(--shadow)}
+.tension .q{padding:17px 24px;border-bottom:1px solid var(--rule-soft);
+  font-family:Archivo,sans-serif;font-weight:600;font-size:18px}
+.tension .sides{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:760px){.tension .sides{grid-template-columns:1fr}}
+.tension .side{padding:19px 24px;font-size:16.5px;color:var(--ink-soft)}
+.tension .side:first-child{border-right:1px solid var(--rule-soft)}
+@media(max-width:760px){.tension .side:first-child{border-right:none;border-bottom:1px solid var(--rule-soft)}}
+.tension .side .h{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ochre);
+  font-weight:600;display:block;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase}
+.tension .side p{margin:0 0 12px}
+.tension .side p:last-child{margin:0}
+.tension .why{padding:17px 24px;border-top:1px solid var(--rule-soft);
+  background:var(--ochre-soft);font-size:16px}
+.tension .why b{color:var(--ochre);font-weight:700;font-family:Archivo,sans-serif;font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:6px}
+
+.tw{overflow-x:auto;border:1px solid var(--rule);background:var(--surface);margin:26px 0}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:15.5px;line-height:1.55}
+th{text-align:left;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;padding:13px 18px;border-bottom:1px solid var(--rule);background:var(--surface-2)}
+td{padding:13px 18px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.co{font-family:Archivo,sans-serif;font-weight:600;font-size:15px;width:200px}
+td.n{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--ink-soft);white-space:nowrap}
+td.lab{font-family:Archivo,sans-serif;font-weight:600;font-size:14.5px;width:230px}
+.grp td{background:var(--surface-2);font-family:Archivo,sans-serif;font-weight:700;
+  font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--signal);padding:10px 18px}
+caption{caption-side:top;text-align:left;font-family:Archivo,sans-serif;font-weight:600;
+  font-size:14px;color:var(--muted);padding:0 0 10px}
+
+.glossary{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:0 34px}
+.g{padding:13px 0;border-top:1px solid var(--rule-soft);font-size:16px}
+.g b{font-family:Archivo,sans-serif;font-weight:600;display:block;font-size:14.5px}
+.g span{color:var(--muted)}
+.foot{padding:44px 0 0;font-size:14.5px;color:var(--muted);max-width:90ch}
+
+.disclaimer{margin-top:30px;border:1px solid var(--rule);border-top:3px solid var(--brand);
+  background:var(--surface);padding:26px 30px 28px;box-shadow:var(--shadow)}
+.disclaimer .dh{display:flex;align-items:center;gap:11px;margin-bottom:15px}
+.disclaimer .dh::before{content:"";width:22px;height:2px;background:var(--brand);flex:0 0 auto}
+.disclaimer .dh span{font-family:Archivo,sans-serif;font-weight:700;font-size:11.5px;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--brand)}
+.disclaimer p{font-size:15.5px;line-height:1.72;color:var(--ink-soft);margin:0;max-width:104ch}
+.disclaimer p strong{color:var(--ink);font-weight:600}
+@media(max-width:560px){.disclaimer{padding:20px 20px 22px}}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  padding:3px 9px;background:var(--flag-soft);color:var(--flag);margin-bottom:16px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<style>
+.co-name{color:var(--signal);font-weight:600}
+
+/* ---- company names ---- */
+.co-name{color:var(--signal);font-weight:600}
+
+/* ---- bar comparison ---- */
+.bars{margin:26px 0;border:1px solid var(--rule);background:var(--surface);padding:20px 24px 16px}
+.bars .bt{font-family:Archivo,sans-serif;font-weight:600;font-size:13.5px;color:var(--muted);margin:0 0 16px}
+.bar{display:grid;grid-template-columns:minmax(120px,1.15fr) minmax(0,3fr) 78px;
+  gap:12px;align-items:center;margin-bottom:11px;font-size:14.5px}
+.bar:last-child{margin-bottom:0}
+.bar .bl{font-family:Archivo,sans-serif;font-weight:600;font-size:13.5px;line-height:1.3}
+.bar .bw{background:var(--surface-2);height:15px;border-radius:2px;overflow:hidden}
+.bar .bf{height:100%;background:var(--signal);border-radius:2px;display:block}
+.bar .bf.alt{background:var(--ochre)}
+.bar .bf.neg{background:var(--flag)}
+.bar .bv{font-family:"IBM Plex Mono",monospace;font-size:13.5px;color:var(--ink);
+  text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:560px){.bar{grid-template-columns:minmax(90px,1fr) minmax(0,2fr) 64px;gap:8px;font-size:13px}.bars{padding:16px 12px 12px}}
+
+/* ---- cause chain ---- */
+.chain{display:flex;flex-wrap:wrap;margin:26px 0;border:1px solid var(--rule);
+  background:var(--surface);overflow:hidden}
+.chain .cs{flex:1 1 168px;padding:16px 18px;border-right:1px solid var(--rule-soft)}
+.chain .cs:last-child{border-right:none}
+.chain .cs .ck{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--signal);
+  font-weight:600;display:block;margin-bottom:6px;letter-spacing:.08em}
+.chain .cs .cx{font-size:14.5px;line-height:1.45;color:var(--ink-soft);display:block}
+.chain .cs .cx b{color:var(--ink);font-weight:600}
+@media(max-width:640px){.chain .cs{flex:1 1 100%;border-right:none;border-bottom:1px solid var(--rule-soft)}
+  .chain .cs:last-child{border-bottom:none}}
+
+/* ---- stat cards ---- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin:26px 0}
+.card{background:var(--surface);padding:16px 18px;min-width:0}
+.card .cu{font-size:11px;color:var(--signal);font-family:Archivo,sans-serif;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:8px}
+.card .cv{font-family:"IBM Plex Mono",monospace;font-size:23px;font-weight:600;
+  display:block;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.card .cl{font-size:14px;color:var(--muted);display:block;margin-top:6px;line-height:1.4}
+
+/* ---- misc ---- */
+td.up{color:var(--signal);font-weight:600}
+td.dn{color:var(--flag);font-weight:600}
+.note{border-left:3px solid var(--brand);background:var(--brand-soft);padding:14px 20px;
+  margin:0 0 24px;font-size:15.5px;color:var(--ink-soft)}
+.note p{margin:0}
+
+/* ---- pointer lists ---- */
+.body ul.pts{list-style:none;margin:6px 0 22px;padding:0;max-width:72%}
+@media(max-width:900px){.body ul.pts{max-width:none}}
+.body ul.pts li{position:relative;padding:9px 0 9px 22px;border-bottom:1px solid var(--rule-soft);font-size:16.5px;line-height:1.55}
+.body ul.pts li:last-child{border-bottom:none}
+.body ul.pts li::before{content:"";position:absolute;left:2px;top:18px;width:8px;height:8px;border-radius:2px;background:var(--signal)}
+.body ul.pts li.dn::before{background:var(--flag)}
+.body ul.pts li.am::before{background:var(--ochre)}
+.body ul.pts li b{font-family:Archivo,sans-serif;font-weight:600;font-size:15px;color:var(--ink)}
+.body ul.pts li .v{font-family:"IBM Plex Mono",monospace;font-size:14.5px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.lead{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-family:Archivo,sans-serif;font-weight:700;margin:22px 0 4px!important}
+td.n{font-family:"IBM Plex Mono",monospace;font-size:14.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---- "In short" box ---- */
+.short{border:1px solid var(--rule);border-left:3px solid var(--signal);background:var(--surface);padding:14px 20px 6px;margin:0 0 28px;max-width:72%}
+@media(max-width:900px){.short{max-width:none}}
+.short .sl{display:block;font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal);font-weight:700;margin-bottom:4px}
+.short ul{margin:0;padding:0 0 0 18px}
+.short li{font-size:16px;line-height:1.55;margin:0 0 8px}
+
+/* ---- table captions and group rows ---- */
+tr.grp td{background:var(--surface-2);font-family:Archivo,sans-serif;font-weight:700;font-size:12px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--signal)}
+caption{caption-side:top;text-align:left;padding:12px 18px;font-family:Archivo,sans-serif;font-weight:600;
+  font-size:13.5px;color:var(--muted);border-bottom:1px solid var(--rule-soft)}
+.main{min-width:0}
+
+/* ---- market heat map ---- */
+.heat{margin:26px 0;border:1px solid var(--rule);background:var(--surface);padding:20px 24px 16px}
+.heat .ht{font-family:Archivo,sans-serif;font-weight:600;font-size:13.5px;color:var(--muted);margin:0 0 14px}
+.heat .hg{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:4px}
+.heat .t{padding:9px 10px 8px;border-radius:2px;min-height:56px;display:flex;flex-direction:column;justify-content:space-between;background:var(--surface-2);min-width:0}
+.heat .t b{font-family:Archivo,sans-serif;font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.25;overflow-wrap:anywhere}
+.heat .t span{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:4px}
+.heat .u1{background:color-mix(in srgb,var(--signal) 14%,var(--surface))}.heat .u2{background:color-mix(in srgb,var(--signal) 28%,var(--surface))}
+.heat .u3{background:color-mix(in srgb,var(--signal) 42%,var(--surface))}.heat .u4{background:color-mix(in srgb,var(--signal) 56%,var(--surface))}
+.heat .d1{background:color-mix(in srgb,var(--flag) 14%,var(--surface))}.heat .d2{background:color-mix(in srgb,var(--flag) 28%,var(--surface))}
+.heat .d3{background:color-mix(in srgb,var(--flag) 42%,var(--surface))}.heat .d4{background:color-mix(in srgb,var(--flag) 56%,var(--surface))}
+.heat .hk{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:12px;font-size:12px;color:var(--muted);font-family:Archivo,sans-serif}
+.heat .hk i{display:inline-block;width:22px;height:12px;border-radius:2px}
+@media(max-width:560px){.heat{padding:16px 12px 12px}.heat .hg{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}.heat .t b{font-size:11.5px}}
+
+/* ---- market condition map ---- */
+.cmap{margin:24px 0 28px;border:1px solid var(--rule);background:var(--surface);padding:22px 24px 16px}
+.cmap .cmt{font-family:Archivo,sans-serif;font-weight:600;font-size:15px;color:var(--muted);margin:0 0 14px}
+.cmap .cmg{font-family:Archivo,sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:18px 0 10px}
+.cmap .cmg:first-of-type{margin-top:4px}
+.cmgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.cm{border-left:4px solid var(--muted);padding:12px 14px 13px;border-radius:2px;background:var(--surface-2);display:flex;flex-direction:column;gap:6px;min-width:0}
+.cm .ck{font-family:Archivo,sans-serif;font-weight:600;font-size:13.5px;color:var(--ink);line-height:1.25}
+.cm .cv{font-family:"IBM Plex Mono",monospace;font-size:21px;font-weight:600;color:var(--ink);line-height:1.1;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.cm .cl{font-size:13.5px;line-height:1.4;color:var(--ink-soft)}
+.cm.g{border-left-color:var(--signal);background:var(--signal-soft)}
+.cm.a{border-left-color:var(--ochre);background:var(--ochre-soft)}
+.cm.r{border-left-color:var(--flag);background:var(--flag-soft)}
+@media(max-width:560px){.cmap{padding:16px 12px 12px}.cmgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.cm .cv{font-size:17px}.cm .cl{font-size:12.5px}}
+
+/* ---- column chart ---- */
+.cols{margin:26px 0;border:1px solid var(--rule);background:var(--surface);padding:20px 24px 14px}
+.cols .ct,.split .ct,.lc .ct{font-family:Archivo,sans-serif;font-weight:600;font-size:13.5px;color:var(--muted);margin:0 0 14px}
+.cols .cg{display:flex;align-items:flex-end;gap:10px;height:190px;border-bottom:1px solid var(--rule)}
+.cols .c{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0}
+.cols .c .cv{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink);margin-bottom:4px}
+.cols .c .cb{width:100%;max-width:46px;background:var(--signal);border-radius:2px 2px 0 0}
+.cols .c .cb.alt{background:var(--ochre)} .cols .c .cb.neg{background:var(--flag)}
+.cols .cx{display:flex;gap:10px;margin-top:6px}
+.cols .cx span{flex:1;text-align:center;font-size:12px;color:var(--muted);font-family:Archivo,sans-serif;min-width:0}
+.cs2{font-size:12px;color:var(--muted);margin:10px 0 0}
+@media(max-width:560px){.cols{padding:16px 12px 12px}.cols .cg,.cols .cx{gap:3px}
+  .cols .c .cv,.cols .cx span{font-size:9.5px;letter-spacing:-.02em}}
+
+/* ---- share bar ---- */
+.split{margin:26px 0;border:1px solid var(--rule);background:var(--surface);padding:20px 24px 16px}
+.split .sb{display:flex;height:30px;border-radius:2px;overflow:hidden}
+.split .sb span{display:block;height:100%}
+.split .s1{background:var(--signal)} .split .s2{background:var(--ochre)}
+.split .s3{background:var(--flag)} .split .s4{background:var(--muted)} .split .s5{background:var(--rule)}
+.split .sk{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:13.5px}
+.split .sk i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:0}
+
+/* ---- line chart ---- */
+.lc{margin:26px 0;border:1px solid var(--rule);background:var(--surface);padding:20px 24px 14px}
+.lc svg{width:100%;height:auto;display:block}
+@media(max-width:560px){.lc{padding:16px 10px 12px}}
+
+.layout{display:grid;grid-template-columns:172px minmax(0,1fr);gap:0 44px;align-items:start}
+.toc{position:sticky;top:20px;padding:44px 0 0;font-family:Archivo,sans-serif}
+.toc .tl{font-size:9.5px;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);
+  font-weight:700;margin:0 0 11px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+.toc ol{list-style:none;margin:0;padding:0}
+.toc a{display:grid;grid-template-columns:20px 1fr;gap:7px;padding:5px 0;font-size:12px;
+  line-height:1.38;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule-soft)}
+.toc a:hover{color:var(--ink)}
+.toc a .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--signal);padding-top:1px}
+.toc a.on,.toc a.on .k{color:var(--ink);font-weight:600}
+@media(max-width:1000px){.layout{grid-template-columns:1fr;gap:0}.toc{display:none}}
+@media(max-width:560px){.wrap{padding:0 16px 80px}table{min-width:560px}}
+
+body{font-size:17px;line-height:1.68}
+.mast h1{font-size:clamp(25px,2.9vw,33px)!important;line-height:1.18!important;max-width:34ch}
+.sec-head h2{font-size:clamp(20px,2.2vw,25px)!important;line-height:1.25!important}
+.body h3{font-size:18.5px!important}
+.deck{font-size:16.5px!important;margin:0 0 28px 42px!important}
+.body > p,.body > h3{max-width:72%}
+@media(max-width:900px){.body > p,.body > h3{max-width:none}}
+section{padding:44px 0!important;scroll-margin-top:24px}
+.dateline{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--muted);margin:6px 0 10px}
+@media(max-width:560px){.deck{margin-left:0!important}}
+
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<div class="brand">
+  <div class="id">
+  <img src="data:image/png;base64,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" alt="Normal Guy">
+  <div>
+    <p class="pub">Intelligence Digest</p>
+    <p class="pubsub"><span class="tri">&#9656;</span> Markets and industry, explained in plain language</p>
+  </div>
+  </div>
+  <button class="themetog" id="themetog" type="button" aria-label="Switch theme">
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20.5 14.6A8.5 8.5 0 1 1 9.4 3.5a7 7 0 0 0 11.1 11.1Z"/>
+    </svg>
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.2"/>
+      <path d="M12 2.4v2.2M12 19.4v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.4 12h2.2M19.4 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/>
+    </svg>
+    <span class="lbl-dark">Dark</span><span class="lbl-light">Light</span>
+  </button>
+</div>
+
+<header class="mast">
+  <span class="eyebrow">Working analysis</span>
+  <p class="dateline">19 November 2026</p>
+  <h1>Foreign money poured into India as the world sold AI shares, while gold, metals and oil all fell and the Fed got ready to raise rates again</h1>
+  <p class="sub">Overseas funds bought Indian shares faster than ever, even as they cut technology holdings at the fastest pace since 2006. Cheaper copper, aluminium and crude lifted car makers and squeezed miners and jewellers. Nvidia lost its founder as chief, Anthropic sold the largest share issue in history, and India's own inflation crossed 6%.</p>
+</header>
+<div class="layout"><nav class="toc" aria-label="Contents"><p class="tl">Contents</p><ol><li><a href="#s01"><span class="k">01</span><span>The big picture</span></a></li><li><a href="#s02"><span class="k">02</span><span>Price of money</span></a></li><li><a href="#s03"><span class="k">03</span><span>Oil, ships, war</span></a></li><li><a href="#s04"><span class="k">04</span><span>India&#x27;s market</span></a></li><li><a href="#s05"><span class="k">05</span><span>Economy and policy</span></a></li><li><a href="#s06"><span class="k">06</span><span>Results and orders</span></a></li><li><a href="#s07"><span class="k">07</span><span>Consumers, pharma</span></a></li><li><a href="#s08"><span class="k">08</span><span>AI money</span></a></li><li><a href="#s09"><span class="k">09</span><span>Risks and problems</span></a></li><li><a href="#s10"><span class="k">10</span><span>Open arguments</span></a></li><li><a href="#s11"><span class="k">11</span><span>Company table</span></a></li></ol></nav><div class="main"><section id="s01">
+<div class="sec-head"><span class="num">01</span><h2>The big picture: money left AI and came to India</h2></div>
+<p class="deck">One shift ties the day together: investors are moving away from AI-linked assets and towards cheaper, steadier markets.</p>
+<div class="body">
+<div class="short"><span class="sl">In short</span><ul>
+<li>Foreign funds bought over ₹1 lakh crore of Indian shares in November, the most ever.</li>
+<li>At the same time they sold technology shares worldwide at the fastest pace in about 20 years.</li>
+<li>Falling metal and oil prices help India, but US interest rates are still rising.</li>
+</ul></div>
+<p>The map below puts each big force on 1 tile. Green helps Indian investors, ochre is mixed and red hurts. Read it from top to bottom: the world, then the Indian market, then the Indian economy.</p>
+<div class="cmap"><p class="cmt">Market condition map: green is good, ochre is mixed, red is bad</p><p class="cmg">World forces</p><div class="cmgrid"><div class="cm a"><span class="ck">Brent crude</span><span class="cv">low $90s</span><span class="cl">Down about 21% in November; still $22 above pre-war</span></div><div class="cm r"><span class="ck">Hormuz flow</span><span class="cv">7-8 mbpd</span><span class="cl">Against about 20 normal; 8 ships hit in a week</span></div><div class="cm g"><span class="ck">Refining margin</span><span class="cv">$25-40</span><span class="cl">Down from $60-75 a barrel a few weeks ago</span></div><div class="cm r"><span class="ck">US 10-year</span><span class="cv">~5.07%</span><span class="cl">Near the 1-year high of 5.36%</span></div><div class="cm r"><span class="ck">Fed hike odds</span><span class="cv">108.6%</span><span class="cl">Markets price a December rise as certain</span></div><div class="cm r"><span class="ck">Dollar index</span><span class="cv">103.2</span><span class="cl">19-month high; pulls money to the US</span></div><div class="cm r"><span class="ck">US oil reserve</span><span class="cv">276.4m bbl</span><span class="cl">Lowest since August 1982</span></div><div class="cm r"><span class="ck">Tech selling</span><span class="cv">-25 pts</span><span class="cl">Fund managers cut tech by most since 2006</span></div><div class="cm a"><span class="ck">Copper</span><span class="cv">7-mo low</span><span class="cl">Down 5.8% in a day; cheaper inputs for India</span></div><div class="cm r"><span class="ck">US jobless claims</span><span class="cv">203K</span><span class="cl">Above 197K expected; continuing claims up</span></div></div><p class="cmg">India market</p><div class="cmgrid"><div class="cm g"><span class="ck">FII buying Nov</span><span class="cv">&gt;₹1 lakh cr</span><span class="cl">Biggest monthly buying ever, in 19 days</span></div><div class="cm r"><span class="ck">DII flow Nov</span><span class="cv">-₹52,608 cr</span><span class="cl">Local funds selling into the foreign buying</span></div><div class="cm g"><span class="ck">Nifty in Nov</span><span class="cv">+9%</span><span class="cl">Best major index in November</span></div><div class="cm r"><span class="ck">FII futures</span><span class="cv">32:68</span><span class="cl">Long to short; bets on a fall still high</span></div><div class="cm r"><span class="ck">Median stock</span><span class="cv">-31.8%</span><span class="cl">Below its all-time high; 307 stocks down &gt;50%</span></div><div class="cm g"><span class="ck">Nifty Auto Nov</span><span class="cv">+11%</span><span class="cl">Best month since November 2020</span></div><div class="cm a"><span class="ck">Rupee</span><span class="cv">93.51</span><span class="cl">Strongest since April; was 96.96 in May</span></div><div class="cm r"><span class="ck">Gold lenders</span><span class="cv">-4 to -5.5%</span><span class="cl">Muthoot, Manappuram on falling gold</span></div><div class="cm a"><span class="ck">2026 IPOs</span><span class="cv">₹1.58 lakh cr</span><span class="cl">108 issues so far; SME froth</span></div></div><p class="cmg">India economy</p><div class="cmgrid"><div class="cm a"><span class="ck">Repo rate</span><span class="cv">5.50%</span><span class="cl">First rise since Feb 2023; more expected</span></div><div class="cm r"><span class="ck">CPI inflation</span><span class="cv">6.09%</span><span class="cl">Above RBI 6% limit; food 8.94%</span></div><div class="cm g"><span class="ck">RBI growth view</span><span class="cv">7.1%</span><span class="cl">FY27 forecast, raised from 6.7%</span></div><div class="cm g"><span class="ck">PSB profit H1</span><span class="cv">₹1.09 lakh cr</span><span class="cl">Record; bad loans at 1.69%</span></div><div class="cm g"><span class="ck">Defence capex</span><span class="cv">₹2.19 lakh cr</span><span class="cl">Ministry wants 20% more next year</span></div><div class="cm g"><span class="ck">Rooftop solar</span><span class="cv">19.74 GW</span><span class="cl">About 57 lakh roofs under PM Surya Ghar</span></div><div class="cm a"><span class="ck">Asset sales</span><span class="cv">₹2.9 lakh cr</span><span class="cl">FY27 monetisation, 50% above FY26</span></div><div class="cm r"><span class="ck">UPI MDR</span><span class="cv">Delayed</span><span class="cl">Pushed past 2027 state polls</span></div><div class="cm r"><span class="ck">Drought</span><span class="cv">2 states</span><span class="cl">Karnataka, Maharashtra hit rural loans</span></div></div><p class="cs2">Every figure comes from posts, charts, filings or linked reports in the material; the colour is a plain reading of whether the force helps or hurts Indian investors.</p></div>
+<p>The pattern is clear. Most world tiles are red because US rates and the dollar are high and AI shares are falling. The India market tiles are mixed: foreign money is flooding in, but only into large companies. The India economy tiles lean green on growth and profit, with 1 big red tile, inflation above 6%.</p>
+
+<h3>A rotation, not a crash</h3>
+<p>Global fund managers cut their technology holdings by the most since 2006. In the US, defensive shares such as food, health and power companies beat the tech-heavy Nasdaq index by about 23 points over 2 months. Some of that money found its way to India, which has few AI companies and so looks like a safe place to hide.</p>
+<div class="bars">
+<p class="bt">How major share indices moved in November, %</p>
+<div class="bar"><span class="bl">Sensex</span><span class="bw"><span class="bf" style="width:88%"></span></span><span class="bv">+9.7%</span></div>
+<div class="bar"><span class="bl">Nifty 50</span><span class="bw"><span class="bf" style="width:82%"></span></span><span class="bv">+9.0%</span></div>
+<div class="bar"><span class="bl">Dow Jones</span><span class="bw"><span class="bf neg" style="width:32%"></span></span><span class="bv">-3.5%</span></div>
+<div class="bar"><span class="bl">Nasdaq</span><span class="bw"><span class="bf neg" style="width:68%"></span></span><span class="bv">-7.5%</span></div>
+<div class="bar"><span class="bl">Nikkei</span><span class="bw"><span class="bf neg" style="width:73%"></span></span><span class="bv">-8.0%</span></div>
+<div class="bar"><span class="bl">Kospi</span><span class="bw"><span class="bf neg" style="width:100%"></span></span><span class="bv">-11.0%</span></div>
+<p class="cs2">Month-to-date moves listed in a morning market note</p>
+</div>
+<p>One view is that this is the start of a long return to India after 26 months of foreign selling. The opposite view points to the futures market, where foreign funds still hold 68% of their index bets on a fall, so part of the cash buying may be a hedged trade that can reverse fast.</p>
+
+<h3>Cheap commodities, costly money</h3>
+<p>Copper fell to a 7-month low and aluminium dropped below $2,900 a tonne. Crude oil is down about a fifth in November. For India, which imports most of its oil and many metals, this is good news: car makers, air-conditioner makers and paint companies pay less for their inputs.</p>
+<p>The catch is the price of money. US inflation is still high, almost every Fed official sees more rate rises, and the US 10-year borrowing cost is near 5%. India's own inflation hit 6.09%, so the Reserve Bank has less room to help.</p>
+<div class="heat"><p class="ht">World markets on the night of 18 November, % change</p><div class="hg"><div class="t d2"><b>Dow</b><span>-1.11%</span></div><div class="t d1"><b>S&amp;P 500</b><span>-0.23%</span></div><div class="t u1"><b>Nasdaq</b><span>+0.42%</span></div><div class="t u1"><b>Nikkei</b><span>+0.30%</span></div><div class="t d2"><b>Kospi</b><span>-1.20%</span></div><div class="t d3"><b>Hang Seng</b><span>-1.50%</span></div><div class="t d2"><b>Shanghai</b><span>-0.80%</span></div></div><div class="hk"><span>Fall</span><i style="background:color-mix(in srgb,var(--flag) 56%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--flag) 28%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--signal) 28%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--signal) 56%,var(--surface))"></i><span>Rise</span></div><p class="cs2">Index moves as listed in a morning market note in the material</p></div>
+<p>The world map was mostly red overnight. Only the Nasdaq and the Nikkei ended slightly up, and Asian markets outside Japan fell.</p>
+
+<h3>Reading between the lines</h3>
+<p>The same AI boom that lifted US shares is now pushing up US inflation. Fed officials said so in their minutes: data-centre building is straining supply. So the AI trade hurts India twice and helps once. It keeps US rates high, it drains money from Asian chip markets, but it also sends nervous money looking for markets without AI risk, and India is the biggest of those.</p>
+<p>So the winners right now are Indian large companies that gain from cheaper inputs, mainly car makers, banks and consumer firms. The losers are miners, gold-linked companies and smaller Indian shares, which local funds are selling to meet redemptions.</p>
+<div class="chain">
+<div class="cs"><span class="ck">STEP 1</span><span class="cx"><b>AI fears</b> push investors out of tech worldwide</span></div>
+<div class="cs"><span class="ck">STEP 2</span><span class="cx"><b>Metals and oil fall</b> as AI and war bets unwind</span></div>
+<div class="cs"><span class="ck">STEP 3</span><span class="cx"><b>India looks safer</b> and foreign funds buy large caps</span></div>
+<div class="cs"><span class="ck">STEP 4</span><span class="cx"><b>Car and consumer firms gain</b> from cheaper inputs</span></div>
+<div class="cs"><span class="ck">STEP 5</span><span class="cx"><b>But US rates stay high</b>, so the rally rests on flows</span></div>
+</div>
+</div>
+</section>
+<section id="s02">
+<div class="sec-head"><span class="num">02</span><h2>The price of money: the Fed hikes again and Indian inflation crosses 6%</h2></div>
+<p class="deck">US rates, India's inflation, the rupee and gold, and why they now point in different directions.</p>
+<div class="body">
+<div class="short"><span class="sl">In short</span><ul>
+<li>Almost every US Fed official expects to raise rates again, probably in December.</li>
+<li>India's retail inflation rose to 6.09%, above the Reserve Bank's upper limit.</li>
+<li>Gold and silver fell hard as the dollar rose to a 19-month high.</li>
+</ul></div>
+
+<h3>The Fed is not done</h3>
+<p>The minutes of the Fed's October meeting (the written record of its discussion) showed that almost all officials see more rate rises ahead. A couple said December could bring a rise bigger than 0.25%. Many named the AI building boom as a real source of inflation, because it is pushing up prices for power, chips and labour.</p>
+<ul class="pts">
+<li class="dn"><b>Market pricing</b> — interest-rate futures give a <span class="v">108.6%</span> chance of a December rise, so a hike is fully expected.</li>
+<li class="dn"><b><span class="co-name">JPMorgan</span></b> — now expects rises at each of the next 3 meetings.</li>
+<li class="dn"><b>US 10-year yield</b> — about <span class="v">5.07%</span> (a yield is what lenders demand to lend for that long); the 20-year auction cleared at 5.459%.</li>
+<li class="am"><b>Jobs</b> — weekly jobless claims rose to <span class="v">203,000</span>, above the 197,000 expected.</li>
+<li class="am"><b>Debt load</b> — about $8 trillion of US government debt must be refinanced in 12 months at higher rates.</li>
+</ul>
+<p>One view is that the US cannot live with rates this high and will end up printing money to protect its bond market. The opposite view, held by some bond traders, is that the 10-year yield has peaked for now and will drift lower in the near term.</p>
+
+<h3>India's inflation problem</h3>
+<p>Retail inflation rose to 6.09% in October, and food prices were up 8.94% from a year ago. The Reserve Bank had already raised its repo rate (the rate at which it lends to banks) to 5.50% on 7 October, its first rise in years.</p>
+<div class="cards">
+<div class="card"><span class="cu">Repo rate</span><span class="cv">5.50%</span><span class="cl">Raised by 0.25% on 7 October</span></div>
+<div class="card"><span class="cu">CPI inflation</span><span class="cv">6.09%</span><span class="cl">October; food at 8.94%</span></div>
+<div class="card"><span class="cu">RBI growth view</span><span class="cv">7.1%</span><span class="cl">FY27 forecast, raised from 6.7%</span></div>
+<div class="card"><span class="cu">Goldman Sachs view</span><span class="cv">6.25%</span><span class="cl">Repo by mid-2027, after 0.75% more</span></div>
+</div>
+<p>Banks already expect more. A review of 25 bank calls found <span class="co-name">ICICI Bank</span>'s house view is 2 more rises. Public sector banks gain first, because half or more of their loans are linked to the repo rate, while borrowers such as finance companies and builders pay more.</p>
+
+<h3>A rupee that is getting stronger</h3>
+<p>The rupee has gained as foreign money arrived. It closed at 93.51 per dollar on 17 November, its strongest since April, after hitting a record low of 96.96 in May.</p>
+<div class="lc"><p class="ct">Rupee per US dollar, closing level</p><svg viewBox="0 0 640 230" role="img" aria-label="Rupee per US dollar, closing level"><line x1="58" x2="626" y1="200.0" y2="200.0" style="stroke:var(--rule-soft)"/><text x="52" y="204.0" text-anchor="end" style="fill:var(--muted);font:11px IBM Plex Mono">93.43</text><line x1="58" x2="626" y1="154.5" y2="154.5" style="stroke:var(--rule-soft)"/><text x="52" y="158.5" text-anchor="end" style="fill:var(--muted);font:11px IBM Plex Mono">93.64</text><line x1="58" x2="626" y1="109.0" y2="109.0" style="stroke:var(--rule-soft)"/><text x="52" y="113.0" text-anchor="end" style="fill:var(--muted);font:11px IBM Plex Mono">93.85</text><line x1="58" x2="626" y1="63.5" y2="63.5" style="stroke:var(--rule-soft)"/><text x="52" y="67.5" text-anchor="end" style="fill:var(--muted);font:11px IBM Plex Mono">94.06</text><line x1="58" x2="626" y1="18.0" y2="18.0" style="stroke:var(--rule-soft)"/><text x="52" y="22.0" text-anchor="end" style="fill:var(--muted);font:11px IBM Plex Mono">94.27</text><text x="58.0" y="222" text-anchor="start" style="fill:var(--muted);font:11px Archivo">11 Nov</text><text x="200.0" y="222" text-anchor="middle" style="fill:var(--muted);font:11px Archivo">12 Nov</text><text x="342.0" y="222" text-anchor="middle" style="fill:var(--muted);font:11px Archivo">13 Nov</text><text x="484.0" y="222" text-anchor="middle" style="fill:var(--muted);font:11px Archivo">16 Nov</text><text x="626.0" y="222" text-anchor="end" style="fill:var(--muted);font:11px Archivo">17 Nov</text><path d="M58.0,143.5 L200.0,50.7 L342.0,35.6 L484.0,93.9 L626.0,182.4" style="fill:none;stroke:var(--signal);stroke-width:2.2"/><circle cx="58.0" cy="143.5" r="3" style="fill:var(--signal)"/><circle cx="200.0" cy="50.7" r="3" style="fill:var(--signal)"/><circle cx="342.0" cy="35.6" r="3" style="fill:var(--signal)"/><circle cx="484.0" cy="93.9" r="3" style="fill:var(--signal)"/><circle cx="626.0" cy="182.4" r="3" style="fill:var(--signal)"/><text x="622.0" y="174.4" text-anchor="end" style="fill:var(--ink);font:600 12px IBM Plex Mono">93.51</text></svg><p class="cs2">Daily closing levels from news reports; a lower number means a stronger rupee</p></div>
+<p>Chief Economic Adviser V Anantha Nageswaran said India may have to manage a rupee that is too strong, not too weak, next year. Cheaper oil and inflows are the reason. But the October trade deficit was the widest in a year, so the rupee still depends on foreign money staying.</p>
+
+<h3>Gold and silver crack</h3>
+<p>Gold fell below $3,750 an ounce and is heading for its worst year since 2013. Silver fell below $45, far under its January peak, and Indian gold prices dropped sharply too (the table has the figures).</p>
+<div class="tw"><table><caption>Precious metals and who is buying</caption>
+<thead><tr><th>Measure</th><th>Figure</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td class="lab">Gold, global</td><td class="n dn">~$3,726</td><td>14-month low after the Fed minutes</td></tr>
+<tr><td class="lab">Gold, MCX</td><td class="n dn">₹1,29,235</td><td>Per 10 grams; down 7.18% in 5 days</td></tr>
+<tr><td class="lab">Silver, India</td><td class="n dn">₹1,68,000/kg</td><td>Was ₹4,20,000 in January</td></tr>
+<tr><td class="lab">RBI gold buying</td><td class="n">72.6t → 4t → 0.9t</td><td>2024, 2025 and 2026 so far</td></tr>
+<tr><td class="lab">China central bank</td><td class="n up">129 tonnes</td><td>Bought heavily in the last 3 months</td></tr>
+<tr><td class="lab">Gold ETF inflows, India</td><td class="n up">₹4,500 cr+</td><td>November to the 18th, against ₹3,400 cr in all of October</td></tr>
+</tbody></table></div>
+<p>Views split on why gold is falling. One view is that investors who lost money on AI shares are selling gold to cover margin calls, so the fall is forced and temporary while central banks keep buying. The opposite view reads the price action as a warning: a strong dollar and rising real rates usually hurt gold for longer.</p>
+<p>Reading between the lines, Indian households are still buying gold funds into the fall, while the Reserve Bank has nearly stopped. So the cheaper gold helps India's import bill, but it hits the value of jewellers' stock and the collateral behind gold loans (section 07 has the share moves).</p>
+</div>
+</section>
+<section id="s03">
+<div class="sec-head"><span class="num">03</span><h2>Oil, ships and war: the barrel is cheaper, the danger is not</h2></div>
+<p class="deck">Crude and fuel margins fell sharply even as tankers burn near Hormuz and talk of new strikes on Iran grows.</p>
+<div class="body">
+<div class="short"><span class="sl">In short</span><ul>
+<li>Brent crude fell to the low $90s, down about a fifth in November.</li>
+<li>Refining margins, which had pushed up diesel prices, collapsed even faster.</li>
+<li>Yet attacks on ships and talk of new US strikes on Iran keep the risk high.</li>
+</ul></div>
+
+<h3>Fuel got cheaper first</h3>
+<p>For central banks, the bigger story is not the crude price but the refining margin, which is the gap between the price of crude and the fuels made from it. That margin had hit records from July to September and pushed up diesel costs everywhere. It has now fallen back close to pre-war levels.</p>
+<div class="bars">
+<p class="bt">Refining margins now, $ per barrel (they were about $60-75 at the peak)</p>
+<div class="bar"><span class="bl">US 3-2-1 margin</span><span class="bw"><span class="bf alt" style="width:100%"></span></span><span class="bv">~$41</span></div>
+<div class="bar"><span class="bl">Brent margin</span><span class="bw"><span class="bf alt" style="width:73%"></span></span><span class="bv">~$30</span></div>
+<div class="bar"><span class="bl">Dubai margin</span><span class="bw"><span class="bf alt" style="width:54%"></span></span><span class="bv">~$22</span></div>
+<p class="cs2">Values read from a chart image in the material</p>
+</div>
+<p>A diesel shortage created a petrol surplus, because refiners ran hard to make diesel and petrol piled up as summer driving ended. US petrol prices had their biggest one-day drop in 18 years. So inflation from fuel should ease, which is the one piece of good news for the Fed.</p>
+
+<h3>The numbers behind the fall</h3>
+<div class="cards">
+<div class="card"><span class="cu">US crude</span><span class="cv">&lt;$82</span><span class="cl">First time since 27 August</span></div>
+<div class="card"><span class="cu">US oil reserve</span><span class="cv">276.4m bbl</span><span class="cl">Lowest since August 1982</span></div>
+<div class="card"><span class="cu">US stock build</span><span class="cv">+3.38m bbl</span><span class="cl">Crude, against a small draw expected</span></div>
+<div class="card"><span class="cu">IEA surplus</span><span class="cv">1.7 mb/d</span><span class="cl">Expected for the 4th quarter</span></div>
+</div>
+<p>One view says the market is oversupplied: US output is at a record, stocks are rising and the IEA (the <span class="co-name">International Energy Agency</span>) sees a surplus. The opposite view notes that Brent's near-month spreads (the price gap between the nearest month's and the next month's oil) did not weaken in the sell-off, which they normally do when a glut is real, and that inventories are very low.</p>
+
+<h3>Hormuz is still half shut</h3>
+<p>The Strait of Hormuz is the narrow sea lane out of the Gulf that normally carries about a fifth of the world's oil. Big tankers are now targets, so smaller ships are doing the work, often moving oil from ship to ship in the Gulf of Oman.</p>
+<ul class="pts">
+<li class="dn"><b>Flow</b> — the 7-day average fell to about <span class="v">7-8 mbpd</span> (million barrels a day), against about 20 in normal times.</li>
+<li class="dn"><b>Attacks</b> — 8 tankers or gas carriers were hit between 10 and 17 November; Iran's Revolutionary Guards said 3 more were on fire.</li>
+<li class="am"><b>Discounts</b> — Gulf producers are cutting prices by $7-11 a barrel to move cargoes out.</li>
+<li class="am"><b>Small ships</b> — mid-size tankers moved about 2 mbpd out in October, the most since the war began.</li>
+<li class="dn"><b>Saudi Arabia</b> — Houthi rebels hit the Riyadh tower housing the national wealth fund, the 2nd attack on the city's finance district in November.</li>
+<li class="dn"><b>Yemen</b> — Saudi officials expect the war there to run well into 2027.</li>
+</ul>
+
+<h3>Talk of another round on Iran</h3>
+<p>The New York Times reported that President Trump is weighing another extensive round of strikes on Iran, under pressure from Israel. Israel's military and intelligence chiefs reportedly told Washington that Iran is preparing chemical weapons. Trump has also cut his vice president out of Iran peace talks after the vice president blamed the war for mid-term election losses.</p>
+<p>Views split sharply. One view takes the warning seriously, given Iran's rebuilt missiles and drones. The opposite view says no evidence was shown to Gulf states, compares it to the Iraq weapons claims of 2003, and warns that blame is being set up before any event.</p>
+
+<h3>3 leaders, 1 vague promise</h3>
+<p>Presidents Xi, Putin and Trump held their first three-way meeting in Shenzhen during the APEC summit. They pledged, in loose terms, to raise the supply of refined fuels and spoke about avoiding nuclear war. Putin later said there was no deal to make such meetings regular, and Poland's prime minister reacted with "God, protect us from such friends."</p>
+<p>Reading between the lines, the pledge changes little: the US is already refining at full stretch, China can only make more fuel by buying more crude, and Russia's refineries are under Ukrainian attack. Some traders had sold oil fearing a secret US-China deal; that fear looks overdone.</p>
+<p>So for India the near-term picture is good, with cheaper crude, cheaper diesel and a stronger rupee. But the risk has moved, not gone. A single confirmed loss of a large tanker, or a new US strike, could reverse the price fall within days, and India's cost of crude depends on that sea lane.</p>
+</div>
+</section>
+<section id="s04">
+<div class="sec-head"><span class="num">04</span><h2>India's market: record foreign buying, but only at the top</h2></div>
+<p class="deck">Where the money went, which shares gained from cheaper metals, and why most portfolios did not feel the rally.</p>
+<div class="body">
+<div class="short"><span class="sl">In short</span><ul>
+<li>Foreign funds bought more Indian shares in November than in any month before.</li>
+<li>They bought big banks and car makers, while local funds sold smaller shares.</li>
+<li>Car makers had their best month since 2020 as copper and aluminium fell.</li>
+</ul></div>
+
+<h3>The biggest foreign buying ever</h3>
+<p>Foreign institutional investors (FIIs, big overseas funds) crossed ₹1 lakh crore of net buying in Indian cash shares within about 14 sessions. It is the first month ever above that mark, and it follows 26 months of heavy selling.</p>
+<div class="cols">
+<p class="ct">Net foreign buying or selling of Indian shares by month, ₹ thousand crore</p>
+<div class="cg">
+<div class="c"><span class="cv">-123</span><span class="cb neg" style="height:100%"></span></div>
+<div class="c"><span class="cv">-70</span><span class="cb neg" style="height:57%"></span></div>
+<div class="c"><span class="cv">-56</span><span class="cb neg" style="height:46%"></span></div>
+<div class="c"><span class="cv">-49</span><span class="cb neg" style="height:40%"></span></div>
+<div class="c"><span class="cv">-6</span><span class="cb neg" style="height:5%"></span></div>
+<div class="c"><span class="cv">-8</span><span class="cb neg" style="height:6%"></span></div>
+<div class="c"><span class="cv">-44</span><span class="cb neg" style="height:36%"></span></div>
+<div class="c"><span class="cv">-45</span><span class="cb neg" style="height:37%"></span></div>
+<div class="c"><span class="cv">+84</span><span class="cb" style="height:68%"></span></div>
+</div>
+<div class="cx"><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov*</span></div>
+<p class="cs2">Exchange cash-market data from a public tracker; *November to the 16th only, since then above ₹1 lakh crore</p>
+</div>
+<ul class="pts">
+<li><b>Share of market</b> — November buying is about 0.22% of India's total market value, the most since December 2020.</li>
+<li><b>Pace</b> — about $12.2 billion in 19 days, which covers 22% of everything sold since September 2024.</li>
+<li><b>Sectors</b> — financial firms took over ₹40,000 crore in the first half of November; capital goods saw selling.</li>
+<li class="dn"><b>Still negative</b> — 2026 remains the worst foreign-selling year since 2002, at about minus $21 billion.</li>
+<li class="am"><b><span class="co-name">Goldman Sachs</span></b> — upgraded India to overweight.</li>
+</ul>
+<div class="lc"><p class="ct">Nifty 50 closing level as foreign money came in</p><svg viewBox="0 0 640 230" role="img" aria-label="Nifty 50 closing level as foreign money came in"><line x1="58" x2="626" y1="200.0" y2="200.0" style="stroke:var(--rule-soft)"/><text x="52" y="204.0" text-anchor="end" style="fill:var(--muted);font:11px IBM Plex Mono">22,376</text><line x1="58" x2="626" y1="154.5" y2="154.5" style="stroke:var(--rule-soft)"/><text x="52" y="158.5" text-anchor="end" style="fill:var(--muted);font:11px IBM Plex Mono">23,210</text><line x1="58" x2="626" y1="109.0" y2="109.0" style="stroke:var(--rule-soft)"/><text x="52" y="113.0" text-anchor="end" style="fill:var(--muted);font:11px IBM Plex Mono">24,043</text><line x1="58" x2="626" y1="63.5" y2="63.5" style="stroke:var(--rule-soft)"/><text x="52" y="67.5" text-anchor="end" style="fill:var(--muted);font:11px IBM Plex Mono">24,877</text><line x1="58" x2="626" y1="18.0" y2="18.0" style="stroke:var(--rule-soft)"/><text x="52" y="22.0" text-anchor="end" style="fill:var(--muted);font:11px IBM Plex Mono">25,710</text><text x="58.0" y="222" text-anchor="start" style="fill:var(--muted);font:11px Archivo">28 Oct</text><text x="247.3" y="222" text-anchor="middle" style="fill:var(--muted);font:11px Archivo">6 Nov</text><text x="436.7" y="222" text-anchor="middle" style="fill:var(--muted);font:11px Archivo">16 Nov</text><text x="626.0" y="222" text-anchor="end" style="fill:var(--muted);font:11px Archivo">17 Nov</text><path d="M58.0,182.4 L247.3,55.1 L436.7,40.9 L626.0,35.6" style="fill:none;stroke:var(--signal);stroke-width:2.2"/><circle cx="58.0" cy="182.4" r="3" style="fill:var(--signal)"/><circle cx="247.3" cy="55.1" r="3" style="fill:var(--signal)"/><circle cx="436.7" cy="40.9" r="3" style="fill:var(--signal)"/><circle cx="626.0" cy="35.6" r="3" style="fill:var(--signal)"/><text x="622.0" y="27.6" text-anchor="end" style="fill:var(--ink);font:600 12px IBM Plex Mono">25,387.4</text></svg><p class="cs2">Closing levels from market reports</p></div>
+<p>The Nifty rose about 10% in just 7 sessions from 28 October as the money arrived. It has since held a narrow range just above 25,000.</p>
+
+<h3>2 markets in 1</h3>
+<p>Local funds and retail investors sold while foreigners bought. Domestic institutions sold about ₹52,600 crore in November to the 16th, after buying all year. The result is a K-shaped market: the index rises while most shares go nowhere.</p>
+<div class="tw"><table><caption>How far Indian shares sit below their peaks</caption>
+<thead><tr><th>Measure</th><th>Figure</th></tr></thead>
+<tbody>
+<tr><td class="lab">Median stock, distance from all-time high</td><td class="n dn">-31.8%</td></tr>
+<tr><td class="lab">Stocks down more than 50% from peak</td><td class="n dn">307 (24.4%)</td></tr>
+<tr><td class="lab">Median micro-cap, distance from high</td><td class="n dn">-38%</td></tr>
+<tr><td class="lab">Firms above ₹2,000 crore, median fall from 52-week high</td><td class="n dn">-22%</td></tr>
+<tr><td class="lab">Polycab, KEI, Apar PE (price to earnings)</td><td class="n">~35 to 42</td></tr>
+<tr><td class="lab">Same 3 at their 2026 peaks</td><td class="n">~55 to 63</td></tr>
+</tbody></table></div>
+<p>One view is that the rally will spread down to smaller shares once local investors stop selling. The opposite view is that the gap reflects real worry, because small and micro companies face higher rates, drought in 2 states and weak earnings, and foreign funds do not buy them.</p>
+
+<h3>Metals down, cars up</h3>
+<p>Copper and aluminium both fell sharply in 1 session, and silver has collapsed from its January peak. That cuts costs for any company that turns metal into products. Nifty Auto is up about 11% in November, its best month since November 2020.</p>
+<div class="heat"><p class="ht">Indian shares named in the material, 19 November, % change</p><div class="hg"><div class="t u4"><b>Maruti</b><span>+7.30%</span></div><div class="t u4"><b>Eicher</b><span>+4.74%</span></div><div class="t u4"><b>M&amp;M</b><span>+4.66%</span></div><div class="t u3"><b>Tata Motors PV</b><span>+4.00%</span></div><div class="t u3"><b>Pidilite</b><span>+3.37%</span></div><div class="t u3"><b>Voltas</b><span>+3.00%</span></div><div class="t u3"><b>Blue Star</b><span>+3.00%</span></div><div class="t u4"><b>Tinna Rubber</b><span>+19.63%</span></div><div class="t d2"><b>Infosys</b><span>-1.64%</span></div><div class="t d1"><b>TCS</b><span>-1.34%</span></div><div class="t d4"><b>CreditAccess</b><span>-6.05%</span></div><div class="t d4"><b>Paytm</b><span>-6.48%</span></div></div><div class="hk"><span>Fall</span><i style="background:color-mix(in srgb,var(--flag) 56%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--flag) 28%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--signal) 28%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--signal) 56%,var(--surface))"></i><span>Rise</span></div><p class="cs2">Moves as reported in posts and chart images on 19 November</p></div>
+<p>The heat map shows the split clearly: car makers and paint and cooling companies rose, while IT services, a micro-lender and <span class="co-name">Paytm</span> fell.</p>
+<ul class="pts">
+<li><b>Two-wheelers first</b> — <span class="co-name">Emkay</span> expects two-wheeler makers to gain first from cheaper aluminium and copper; for cars, Indian steel prices matter more.</li>
+<li><b>Ancillaries warned</b> — parts makers may have to pass the savings on, so their revenue falls; wheel makers trading at peak multiples look exposed.</li>
+<li><b>Air conditioners</b> — <span class="co-name">Equirus</span> expects margin recovery from the 4th quarter; <span class="co-name">Voltas</span> and <span class="co-name">Blue Star</span> rose 3%.</li>
+<li><b>Havells</b> — promoters bought about 30 lakh shares in November; raw materials are 60-65% of its sales.</li>
+<li class="am"><b>Ferrous metals</b> — <span class="co-name">Goldman Sachs</span> still rates <span class="co-name">JSW Steel</span>, <span class="co-name">Jindal Stainless</span> and <span class="co-name">Shyam Metalics</span> a buy, as Indian steel prices are 35% higher than a year ago.</li>
+<li class="dn"><b>Aluminium</b> — prices are down 8.4% this quarter; <span class="co-name">Emkay</span> still sees a shortage in 2027 and 2028 and prefers <span class="co-name">Vedanta</span>.</li>
+</ul>
+
+<h3>What fund managers are buying</h3>
+<p>Small-cap fund houses agreed most on buying a few names in October. Counting how many fund houses acted, rather than the money, shows real interest.</p>
+<div class="bars">
+<p class="bt">Small-cap fund houses (out of 27) that bought or sold a stock in October</p>
+<div class="bar"><span class="bl">Cemindia Projects (bought)</span><span class="bw"><span class="bf" style="width:100%"></span></span><span class="bv">8</span></div>
+<div class="bar"><span class="bl">PG Electroplast (bought)</span><span class="bw"><span class="bf" style="width:100%"></span></span><span class="bv">8</span></div>
+<div class="bar"><span class="bl">City Union Bank (bought)</span><span class="bw"><span class="bf" style="width:88%"></span></span><span class="bv">7</span></div>
+<div class="bar"><span class="bl">TD Power Systems (bought)</span><span class="bw"><span class="bf" style="width:75%"></span></span><span class="bv">6</span></div>
+<div class="bar"><span class="bl">Eternal (sold)</span><span class="bw"><span class="bf neg" style="width:50%"></span></span><span class="bv">4</span></div>
+<div class="bar"><span class="bl">Apar Industries (sold)</span><span class="bw"><span class="bf neg" style="width:50%"></span></span><span class="bv">4</span></div>
+<p class="cs2">Fund portfolio disclosures for October, compiled in the material</p>
+</div>
+
+<h3>A fight over commodity trading</h3>
+<p><span class="co-name">NSE</span> moved the expiry day of its crude oil options away from <span class="co-name">MCX</span>'s, and its share of energy options trading tripled to 3.04%. In natural gas options it crossed half of the market on 1 expiry day. <span class="co-name">BSE</span> plans to enter from December.</p>
+<p>One view says <span class="co-name">NSE</span> can do to <span class="co-name">MCX</span> what <span class="co-name">BSE</span> did to NSE in equity options, and NSE shares rose 18% in November. The opposite view says MCX still holds about 97% of energy options and its monopoly in electricity, crude and gold is hard to break; <span class="co-name">UBS</span> raised its MCX target to ₹4,500.</p>
+<p>Reading between the lines, the foreign buying is a bet on India's big, liquid names, not on the whole market. So until local funds stop selling, index gains will not lift most portfolios, and the companies gaining most are those whose costs are falling.</p>
+</div>
+</section>
+<section id="s05">
+<div class="sec-head"><span class="num">05</span><h2>India's economy and policy: big budgets, thin know-how</h2></div>
+<p class="deck">Defence, state banks, asset sales, solar and chips: money is flowing, but India still depends on China for the machines.</p>
+<div class="body">
+<div class="short"><span class="sl">In short</span><ul>
+<li>The defence ministry wants 20% more money for equipment next year.</li>
+<li>State-owned banks posted record profits with the lowest bad loans in their history.</li>
+<li>Solar, batteries, drones and chips still rely on Chinese machines and parts.</li>
+</ul></div>
+
+<h3>Defence: from budget to orders</h3>
+<p>The defence ministry has asked for a 20% rise in capital spending next year, after a 22% rise this year. It wants to turn the money into firm orders for Indian makers, and it is rewriting buying rules to favour private companies.</p>
+<div class="cards">
+<div class="card"><span class="cu">FY27 defence capex</span><span class="cv">₹2.19 lakh cr</span><span class="cl">Implied FY28 near ₹2.63 lakh cr</span></div>
+<div class="card"><span class="cu">Contracts this year</span><span class="cv">~₹80,000 cr</span><span class="cl">After over ₹2 lakh cr last year</span></div>
+<div class="card"><span class="cu">AMCA fighter</span><span class="cv">~₹15,000 cr</span><span class="cl">Winner due within a month</span></div>
+<div class="card"><span class="cu">Defence exports</span><span class="cv">₹50,000 cr</span><span class="cl">Crossed a year ahead of target</span></div>
+</div>
+<ul class="pts">
+<li><b>AMCA</b> — the 5th-generation stealth fighter will go to a private-led team: <span class="co-name">Tata Advanced Systems</span>, L&amp;T with <span class="co-name">BEL</span> and Dynamatic, or <span class="co-name">Bharat Forge</span> with <span class="co-name">BEML</span> and <span class="co-name">Data Patterns</span>.</li>
+<li><b>Barak</b> — a ₹1,976 crore deal with <span class="co-name">Israel Aerospace Industries</span> upgrades the Navy's ship-defence missiles.</li>
+<li class="am"><b>Theatre commands</b> — the Air Force has 29 fighter squadrons against 42 sanctioned; its new chief says "everybody is on board" for joint commands.</li>
+<li class="am"><b>Japanese frigates</b> — India is studying Mogami-class ships, but they use American guns and launchers the Navy does not run.</li>
+<li><b>Japan</b> — its forces will use an Indian firing range for the first time next year.</li>
+</ul>
+<p>One view is that the Air Force's shortage is the best reason for theatre commands, since a single authority can move scarce jets between fronts. The opposite view, long held by the Air Force, is that splitting few squadrons leaves every front too thin.</p>
+
+<h3>State banks at a record</h3>
+<p>Public sector banks earned a record ₹1.09 lakh crore in the first half, up 16.9%. Their bad loans are the lowest in their history, and all of them have set aside money to cover over 90% of those loans.</p>
+<div class="tw"><table><caption>Public sector banks, first half of FY27</caption>
+<thead><tr><th>Measure</th><th>Figure</th><th>Change</th></tr></thead>
+<tbody>
+<tr><td class="lab">Net profit</td><td class="n">₹1.09 lakh cr</td><td class="up">+16.9%</td></tr>
+<tr><td class="lab">Total business</td><td class="n">₹301.6 lakh cr</td><td class="up">+15.5%</td></tr>
+<tr><td class="lab">Loan growth (MSME / farm / retail)</td><td class="n">20.4% / 19.5% / 17%</td><td>Broad-based</td></tr>
+<tr><td class="lab">Gross / net bad loans</td><td class="n">1.69% / 0.33%</td><td class="up">Historic low</td></tr>
+<tr><td class="lab">Capital ratio</td><td class="n">16.89%</td><td class="up">+0.93%</td></tr>
+<tr><td class="lab">Cost to income</td><td class="n">47.38%</td><td class="up">-1.91%</td></tr>
+</tbody></table></div>
+<p>One view says state banks are the winners of this rate cycle, since repo-linked loans reprice up first; <span class="co-name">Bank of Maharashtra</span>, <span class="co-name">Bank of Baroda</span> and <span class="co-name">PNB</span> hit record highs. The opposite view, from <span class="co-name">Bernstein</span>, says their lead is cyclical: new expected-loss rules from April 2027 will raise their credit costs, and <span class="co-name">Canara Bank</span> alone estimates ₹12,000-15,000 crore.</p>
+
+<h3>Selling old assets to build new ones</h3>
+<p>The government expects to raise about ₹2.9 lakh crore in FY27 by leasing or selling running assets such as roads and mines, about 50% more than last year. The money funds new building without more borrowing.</p>
+<div class="bars">
+<p class="bt">Expected FY27 asset monetisation by sector, ₹ crore</p>
+<div class="bar"><span class="bl">Roads</span><span class="bw"><span class="bf" style="width:100%"></span></span><span class="bv">~1,00,000</span></div>
+<div class="bar"><span class="bl">Coal and mining</span><span class="bw"><span class="bf" style="width:80%"></span></span><span class="bv">~80,000</span></div>
+<div class="bar"><span class="bl">Power</span><span class="bw"><span class="bf" style="width:50%"></span></span><span class="bv">~50,000</span></div>
+<div class="bar"><span class="bl">Ports</span><span class="bw"><span class="bf" style="width:50%"></span></span><span class="bv">~50,000</span></div>
+<div class="bar"><span class="bl">Railways</span><span class="bw"><span class="bf" style="width:30%"></span></span><span class="bv">~30,000</span></div>
+<p class="cs2">Figures from a report on the National Monetisation Pipeline cited in the material</p>
+</div>
+
+<h3>Solar on every roof, machines from China</h3>
+<p>The PM Surya Ghar scheme has put solar panels on about 57 lakh roofs, with 19.74 GW working. 3 states hold over half of it.</p>
+<div class="split">
+<p class="ct">Rooftop solar under PM Surya Ghar, share of 19.74 GW</p>
+<div class="sb"><span class="s1" style="width:18%"></span><span class="s2" style="width:17%"></span><span class="s3" style="width:16%"></span><span class="s4" style="width:49%"></span></div>
+<div class="sk"><span><i class="s1"></i>Gujarat 18%</span><span><i class="s2"></i>Maharashtra 17%</span><span><i class="s3"></i>Uttar Pradesh 16%</span><span><i class="s4"></i>Other states 49%</span></div>
+<p class="cs2">State capacity figures from a scheme update in the material</p>
+</div>
+<p>This hurts power distributors. Large factories in steel, cement and cars now make their own solar and wind power, and they were the customers who paid high tariffs that subsidised homes. So distributors lose their best payers while still serving everyone else.</p>
+<ul class="pts">
+<li class="dn"><b>Machines</b> — India can make 233 GW of solar panels a year, but 9 in 10 costly machines are imported and it makes almost no wafers.</li>
+<li class="dn"><b>China</b> — proposed curbs on exports of 12 solar technologies in October; German machines cost 40-50% more.</li>
+<li class="dn"><b>Research</b> — the 5 biggest listed solar makers earned about ₹7,300 crore last year and spent about ₹125 crore on research.</li>
+<li class="am"><b>Batteries</b> — only about 1-1.4 GWh of the 40 GWh cell scheme is built; China's export rebate on batteries goes to zero on 1 January 2027.</li>
+<li class="dn"><b>Drones</b> — 80-90% of flight controllers are imported; China extended export controls to drone motors and radios from 18 November.</li>
+</ul>
+
+<h3>Chips: generous money, missing people</h3>
+<p>Andhra Pradesh will match the Centre's chip support, offering up to 80% of approved capital costs and a 5,000-acre park at Tirupati. Japanese firms such as <span class="co-name">Mitsui</span>, <span class="co-name">AOI Electronics</span>, <span class="co-name">Renesas</span> and <span class="co-name">Tokyo Electron</span> are building packaging and equipment links in Gujarat.</p>
+<p>The gap is skills. The ₹1,27,500 crore chip plan starts with older, simpler chips, while a cutting-edge 2 nm plant would need hundreds of engineers who have run one, and India has almost none. Micron's Sanand plant is already exporting memory chips, mostly to Malaysia for final testing.</p>
+<p>Reading between the lines, the government is good at paying for factories and slow at building know-how. So each new Chinese export rule (batteries, solar tools, drone parts, magnets) lands as a cost shock on Indian makers, and the firms that make the machines and materials, not just the end products, are the ones that will matter.</p>
+</div>
+</section>
+<section id="s06">
+<div class="sec-head"><span class="num">06</span><h2>Results and orders: grid, rail and factories</h2></div>
+<p class="deck">Where order books are full, where margins are squeezed, and what cheaper metals mean for engineers.</p>
+<div class="body">
+<div class="short"><span class="sl">In short</span><ul>
+<li>High-voltage grid parts are scarce and their makers earn very high margins.</li>
+<li>Rail makers are shifting from wagons to metros and passenger trains.</li>
+<li>Many engineering firms had weak margins on old fixed-price contracts.</li>
+</ul></div>
+
+<h3>The grid has split into 2 markets</h3>
+<p>"Grid shortage" now means 2 markets. Below 220 kV (kilovolts), transformer makers have spare capacity and their margins have halved. On the big high-voltage lines above that level, parts are still scarce.</p>
+<div class="cols">
+<p class="ct">Hindusthan Insulators operating margin, %</p>
+<div class="cg">
+<div class="c"><span class="cv">5.7</span><span class="cb" style="height:13%"></span></div>
+<div class="c"><span class="cv">37.8</span><span class="cb" style="height:87%"></span></div>
+<div class="c"><span class="cv">43.6</span><span class="cb" style="height:100%"></span></div>
+</div>
+<div class="cx"><span>Q1 FY26</span><span>Q1 FY27</span><span>Q2 FY27</span></div>
+<p class="cs2">Company results as compiled in the material</p>
+</div>
+<ul class="pts">
+<li><b>Why tight</b> — only 3-4 Indian makers supply qualified porcelain insulators; delivery takes 18-24 months and a new plant takes 3-4 years.</li>
+<li><b>Quality Power</b> — order book above ₹2,000 crore; buying WS adds 765 kV insulator designs made by only 2 suppliers globally; targets 50% growth in FY28.</li>
+<li class="dn"><b>Below 220 kV</b> — Shilchar's margin fell from 33% to 16%; Olectra's polymer insulators from 39% to 24%.</li>
+<li class="am"><b>Caution</b> — the insulator makers carry governance flags, including related-party loans, which is partly why they trade cheaply.</li>
+</ul>
+
+<h3>Rail: from wagons to metros</h3>
+<p>Titagarh Rail's revenue slipped slightly to ₹773 crore, but its passenger business more than doubled with better margins. Management expects freight to fall to about half of revenue or less by FY28.</p>
+<div class="split">
+<p class="ct">Titagarh standalone order book of ₹15,369 crore, by segment</p>
+<div class="sb"><span class="s1" style="width:70%"></span><span class="s2" style="width:27%"></span><span class="s4" style="width:3%"></span></div>
+<div class="sk"><span><i class="s1"></i>Passenger and metro 70%</span><span><i class="s2"></i>Freight wagons 27%</span><span><i class="s4"></i>Other 3%</span></div>
+<p class="cs2">Company presentation figures cited in the material</p>
+</div>
+<ul class="pts">
+<li><b>Titagarh</b> — 81 metro cars delivered in the first half, about 200 targeted for FY27; a new order for 4,955 wagons worth about ₹1,700 crore.</li>
+<li><b>Texmaco Rail</b> — South Africa locomotive orders now ₹5,300 crore; freight order book ₹8,000 crore; exports are now 54% of the order book; management said "the tipping point has come".</li>
+<li><b><span class="co-name">Ramkrishna Forgings</span></b> — its forged-wheel venture with Titagarh targets 80,000 wheels in FY28.</li>
+</ul>
+
+<h3>Old contracts, new costs</h3>
+<p>Many engineering firms are still executing orders priced before metals and fuel jumped, so their margins fell even as demand stayed strong. Cheaper copper and aluminium should help from the next quarter.</p>
+<div class="tw"><table><caption>Engineering results and guidance named in the material</caption>
+<thead><tr><th>Company</th><th>Key figure</th><th>What it shows</th></tr></thead>
+<tbody>
+<tr><td class="lab">Cummins India</td><td class="n dn">PAT -27%</td><td>Gross margin fell 4.4%; stock down 16% in 2 weeks; data centres are 30-40% of power sales</td></tr>
+<tr><td class="lab">DEE Development</td><td class="n">Margin 20.1%</td><td>Needs ₹913 crore in H2 for its ₹1,500 crore target, 55% more than H1</td></tr>
+<tr><td class="lab">GMM Pfaudler</td><td class="n up">Orders ₹1,198 cr</td><td>Record quarter, up 36%; German plant cuts done; ₹150 crore of peptide orders</td></tr>
+<tr><td class="lab">Gala Precision</td><td class="n up">Orders +44%</td><td>Wins work from a German spring maker; 20-25% growth guided</td></tr>
+<tr><td class="lab">Jash Engineering</td><td class="n">EBITDA 14%</td><td>Indian parent earns well; overseas units must turn profitable to reach 20%</td></tr>
+<tr><td class="lab">Sigma Advanced Systems</td><td class="n up">Orders ₹10,000 cr+</td><td>About 5x its FY27 revenue; 5 artillery export orders since May</td></tr>
+<tr><td class="lab">Confidence Petroleum</td><td class="n up">Revenue +127%</td><td>PAT up 3.4x to ₹69 crore; first half already above all of FY26</td></tr>
+</tbody></table></div>
+<p>One view is that the worst of the margin squeeze is over now that metals have cooled, so firms like <span class="co-name">Cummins India</span> are near a bottom, and most analysts still rate it a buy. The opposite view says long delivery times on data-centre projects mean more quarters at old prices, and analysts are cutting estimates.</p>
+
+<h3>Textiles: full spinners, empty looms</h3>
+<p>Spinners run near full capacity and can grow only by building plants. Home-textile makers have idle looms they can fill without new spending, and filling them lifts margins quickly.</p>
+<div class="bars">
+<p class="bt">Capacity use in Indian textiles, %</p>
+<div class="bar"><span class="bl">Vardhman (spinning)</span><span class="bw"><span class="bf" style="width:100%"></span></span><span class="bv">~100%</span></div>
+<div class="bar"><span class="bl">KPR Mill (garments)</span><span class="bw"><span class="bf" style="width:89%"></span></span><span class="bv">88.9%</span></div>
+<div class="bar"><span class="bl">Welspun Living</span><span class="bw"><span class="bf alt" style="width:78%"></span></span><span class="bv">77.8%</span></div>
+<div class="bar"><span class="bl">Himatsingka</span><span class="bw"><span class="bf alt" style="width:70%"></span></span><span class="bv">70.3%</span></div>
+<div class="bar"><span class="bl">Indo Count</span><span class="bw"><span class="bf alt" style="width:62%"></span></span><span class="bv">61.5%</span></div>
+<div class="bar"><span class="bl">Trident</span><span class="bw"><span class="bf neg" style="width:47%"></span></span><span class="bv">47%</span></div>
+<p class="cs2">Company disclosures compiled in the material</p>
+</div>
+<p><span class="co-name">Indo Count</span>'s revenue rose 57.5% as idle looms filled. But home-textile exporters sell about 60% of their goods to the US, where buyers pushed tariff costs back onto suppliers and now take months to pay.</p>
+<p>Reading between the lines, the strongest results come from firms with scarce capacity (high-voltage insulators, defence, metros) or idle capacity they can fill. So the firms to worry about are those still carrying old fixed-price contracts or relying on a single large customer.</p>
+</div>
+</section>
+<section id="s07">
+<div class="sec-head"><span class="num">07</span><h2>Consumers, services and pharma: cheaper inputs, pricier money</h2></div>
+<p class="deck">How shoppers, IT firms, jewellers and drug makers are faring as costs fall and AI changes pricing.</p>
+<div class="body">
+<div class="short"><span class="sl">In short</span><ul>
+<li>Consumer firms are getting relief as crude and metals fall, and brokers have turned positive.</li>
+<li>AI is cutting the prices Indian IT firms can charge, before it cuts the work.</li>
+<li>Jewellers and gold lenders fell as gold dropped to a 14-month low.</li>
+</ul></div>
+
+<h3>Shoppers and brands</h3>
+<p>Packaged-goods volumes grew 9% last quarter, the best in several quarters, and margins look to have bottomed as crude eased. Brokers returning from investor meetings report more interest in Indian consumer shares.</p>
+<ul class="pts">
+<li><b>Pidilite</b> — raising Fevicol prices by ₹10-12 a kg (about 5-7%) from 1 December; the stock rose over 3%.</li>
+<li><b><span class="co-name">Parag Milk Foods</span></b> — revenue up 23% and margin up even though milk cost 15% more; paneer capacity to rise 4x by June 2027.</li>
+<li><b><span class="co-name">PVR INOX</span></b> — cheaper "SMART" cinemas in small towns at ₹150-175 a ticket; <span class="co-name">Kotak</span> expects its best-ever quarter.</li>
+<li><b><span class="co-name">Nike</span></b> — wants to triple its India business in 5 years; the athletic market is about $9 billion now.</li>
+<li><b>Honda two-wheelers</b> — ₹2,420 crore for 2 new lines, lifting capacity to about 8 million a year by 2028.</li>
+<li><b><span class="co-name">PhysicsWallah</span></b> — targets ₹9,000-10,000 crore revenue by FY30 and is slowing offline centre openings.</li>
+<li><b><span class="co-name">Urban Company</span></b> — near its record high; its InstaHelp cleaning service lost ₹279 per order, down from ₹760 a year earlier.</li>
+</ul>
+<div class="bars">
+<p class="bt">Parag Milk Foods, growth by business in the September quarter, %</p>
+<div class="bar"><span class="bl">New-age products</span><span class="bw"><span class="bf" style="width:100%"></span></span><span class="bv">+71%</span></div>
+<div class="bar"><span class="bl">Ingredients</span><span class="bw"><span class="bf" style="width:73%"></span></span><span class="bv">+52%</span></div>
+<div class="bar"><span class="bl">Total revenue</span><span class="bw"><span class="bf" style="width:32%"></span></span><span class="bv">+23%</span></div>
+<div class="bar"><span class="bl">Dairy core</span><span class="bw"><span class="bf" style="width:28%"></span></span><span class="bv">+20%</span></div>
+<p class="cs2">Company results as summarised in the material</p>
+</div>
+<p>One view is that consumer shares are cheap again, at about their 5-year average value, and falling costs will lift margins. The opposite view, from <span class="co-name">Haitong</span> on retailers, is that margins come under pressure in the second half, and drought and weak rain could hurt small-town demand.</p>
+
+<h3>IT: AI cuts price before volume</h3>
+<p>Large IT firms grew slowly last quarter. <span class="co-name">HCLTech</span>'s chief puts AI-led price cuts at 2-3% a year, and <span class="co-name">TCS</span> passes part of its productivity gains back to clients.</p>
+<div class="cols">
+<p class="ct">Constant-currency revenue growth, year on year, September quarter, %</p>
+<div class="cg">
+<div class="c"><span class="cv">0.6</span><span class="cb neg" style="height:3%"></span></div>
+<div class="c"><span class="cv">2.6</span><span class="cb alt" style="height:13%"></span></div>
+<div class="c"><span class="cv">2.8</span><span class="cb alt" style="height:13%"></span></div>
+<div class="c"><span class="cv">7.2</span><span class="cb" style="height:35%"></span></div>
+<div class="c"><span class="cv">20.8</span><span class="cb" style="height:100%"></span></div>
+</div>
+<div class="cx"><span>Wipro</span><span>HCLTech</span><span>TCS</span><span>Tech M</span><span>Persistent</span></div>
+<p class="cs2">Company results compiled in the material</p>
+</div>
+<p>The key question is whether this is a one-time price reset or a drag every year. <span class="co-name">TCS</span> now trades at about 17 times earnings, down from about 31. One view says the drag is permanent, because much AI work replaces older work. The opposite view points to AI work earning higher margins and TCS's AI revenue already running in the billions of dollars a year.</p>
+<ul class="pts">
+<li><b><span class="co-name">Tata Technologies</span></b> — investor day targets 15-20% dollar growth a year to FY30 and a 20% margin; 2 investors added it to long-term holdings.</li>
+<li><b><span class="co-name">Cognizant</span></b> — won a £133 million, 7-year data-centre deal from UK Network Rail, beating <span class="co-name">HCLTech</span> and <span class="co-name">TCS</span>.</li>
+<li><b>Offices</b> — global capability centres (GCCs, Indian back offices of foreign firms) leased 26.2 million sq ft in 9 months; <span class="co-name">Smartworks</span> raised its growth guide to 35%.</li>
+</ul>
+
+<h3>Gold shares slide</h3>
+<p>Jewellers and gold lenders fell as gold hit a 14-month low, on worries about the value of their stock and the collateral behind loans.</p>
+<div class="heat"><p class="ht">Gold-linked shares as gold fell, 18 November, % change</p><div class="hg"><div class="t d4"><b>Titan</b><span>-5.30%</span></div><div class="t d4"><b>Kalyan</b><span>-4.80%</span></div><div class="t d4"><b>Sky Gold</b><span>-5.00%</span></div><div class="t d2"><b>Senco Gold</b><span>-2.30%</span></div><div class="t d2"><b>Thangamayil</b><span>-1.80%</span></div><div class="t d3"><b>Muthoot</b><span>-4.00%</span></div><div class="t d4"><b>Manappuram</b><span>-5.50%</span></div><div class="t d3"><b>Consumer Durables index</b><span>-3.10%</span></div></div><div class="hk"><span>Fall</span><i style="background:color-mix(in srgb,var(--flag) 56%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--flag) 28%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--signal) 28%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--signal) 56%,var(--surface))"></i><span>Rise</span></div><p class="cs2">Moves as reported for the session of 18 November</p></div>
+<p>Analysts called the fall mostly mood-driven. Stable, lower prices could help wedding-season buying, but results will depend on how each firm hedged. Separately, <span class="co-name">Senco Gold</span> said an armed robbery at a franchise store in Bihar has no financial impact on it.</p>
+
+<h3>Pharma and contract makers</h3>
+<p>Drug makers that make medicines for other firms (CDMOs) and peptide makers are in demand, and fund managers globally now hold pharma as their biggest overweight.</p>
+<ul class="pts">
+<li><b><span class="co-name">Kopran</span></b> — carbapenem antibiotics are 67% of its API sales; API revenue rose to ₹123 crore.</li>
+<li><b>Dishman Carbogen</b> — holds orders through FY28 to supply the linker and payload for 2 cancer drugs.</li>
+<li><b><span class="co-name">IOL Chemicals</span></b> — expects strong ibuprofen and paracetamol demand for 4-6 quarters; Europe depends fully on imports of both.</li>
+<li><b><span class="co-name">Kwality Pharma</span></b> — guided ₹950-1,000 crore revenue for FY28, a year earlier than planned.</li>
+<li class="dn"><b><span class="co-name">Caplin Point</span></b> — fell 7% after a US FDA "official action indicated" finding at its sterile unit.</li>
+</ul>
+<p>Views split on price. One view says the peptide and CDMO boom is real, backed by orders. The opposite view warns that some contract makers trade at 20 times sales and that buyers chase them more as prices rise, a pattern that usually ends badly.</p>
+<p>Reading between the lines, cheaper inputs help almost every consumer firm at once, but cheaper gold and AI pricing hurt 2 groups that had been favourites. So the gap between consumer winners and losers will come from pricing power: firms that can hold prices while costs fall will see the biggest margin gains.</p>
+</div>
+</section>
+<section id="s08">
+<div class="sec-head"><span class="num">08</span><h2>AI money and the world: a lost founder, a record listing and closed loopholes</h2></div>
+<p class="deck">Nvidia's leadership fight, Anthropic's $1.5 trillion debut, new US chip rules and what they mean for demand.</p>
+<div class="body">
+<div class="short"><span class="sl">In short</span><ul>
+<li><span class="co-name">Nvidia</span> posted record sales but lost its founder Jensen Huang as chief, and shareholders are angry.</li>
+<li><span class="co-name">Anthropic</span> sold the largest share issue in history at a value of about $1.5 trillion.</li>
+<li>New US rules stop Chinese firms from renting American AI chips abroad.</li>
+</ul></div>
+
+<h3>Nvidia: great numbers, no founder</h3>
+<p><span class="co-name">Nvidia</span>'s revenue doubled to $115.8 billion last quarter and it guided $130 billion for the next, above estimates, plus a much bigger share buyback. But it was the first results call in decades without Jensen Huang, who left after reports of extramarital affairs and a suspected Chinese spy plot.</p>
+<ul class="pts">
+<li><b>Board</b> — chair Harvey Jones says Huang will not return; a search firm has approached <span class="co-name">Arm</span>'s chief Rene Haas.</li>
+<li class="dn"><b>Shareholders</b> — a petition to bring him back passed 200,000 names, including about 24% of staff; Bill Ackman says the board failed its duty.</li>
+<li class="dn"><b>Stock</b> — about 38% below its high and the most oversold since 2019; <span class="co-name">Moody's</span> cut its outlook to stable.</li>
+<li class="am"><b>Staff</b> — interim chief Colette Kress promised early pay rises and equity in December.</li>
+<li class="dn"><b>Financing</b> — a $500 billion plan with big lenders to fund customers' chip purchases has lent nothing; no deal is expected before 2027.</li>
+</ul>
+<p>One view, shared by Elon Musk, is that removing Huang was like dropping Michael Jordan mid-season, because he managed suppliers and customers personally. The opposite view is that the business does not depend on one man: data-centre sales still doubled and the roadmap is unchanged.</p>
+
+<h3>Anthropic lists at $1.5 trillion</h3>
+<p><span class="co-name">Anthropic</span> priced its shares at $83, above its planned range, and raised about $81 billion, the largest share sale in history. Orders reached about $500 billion, and most big institutions got no shares at all.</p>
+<div class="cards">
+<div class="card"><span class="cu">Price</span><span class="cv">$83</span><span class="cl">Range had been $70-78</span></div>
+<div class="card"><span class="cu">Raised</span><span class="cv">$81.3bn</span><span class="cl">980 million shares; more with options</span></div>
+<div class="card"><span class="cu">Valuation</span><span class="cv">~$1.5trn</span><span class="cl">Above India's 10 biggest firms combined</span></div>
+<div class="card"><span class="cu">Pre-market signal</span><span class="cv">~$100</span><span class="cl">Indicated opening price</span></div>
+</div>
+<div class="split">
+<p class="ct">Who owns Anthropic at the IPO price, % of shares</p>
+<div class="sb"><span class="s1" style="width:14.6%"></span><span class="s2" style="width:13.4%"></span><span class="s3" style="width:12.6%"></span><span class="s4" style="width:59.4%"></span></div>
+<div class="sk"><span><i class="s1"></i>Amazon 14.6%</span><span><i class="s2"></i>Google 13.4%</span><span><i class="s3"></i>Founders 12.6%</span><span><i class="s4"></i>Everyone else 59.4%</span></div>
+<p class="cs2">Share counts reported in the material; founders hold 50.1% of votes through a special share</p>
+</div>
+<p>Its listing lifted firms that own a stake or sell it chips, even before trading began.</p>
+<div class="heat"><p class="ht">Anthropic investors at the US open, 19 November, % change</p><div class="hg"><div class="t u4"><b>Micron</b><span>+5.80%</span></div><div class="t u3"><b>Alphabet</b><span>+4.30%</span></div><div class="t u3"><b>Nvidia</b><span>+3.60%</span></div><div class="t u2"><b>Broadcom</b><span>+2.70%</span></div><div class="t u2"><b>Microsoft</b><span>+2.50%</span></div><div class="t u2"><b>AMD</b><span>+2.10%</span></div><div class="t u2"><b>Amazon</b><span>+1.90%</span></div><div class="t u2"><b>Salesforce</b><span>+1.80%</span></div><div class="t u1"><b>Zoom</b><span>+0.50%</span></div></div><div class="hk"><span>Fall</span><i style="background:color-mix(in srgb,var(--flag) 56%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--flag) 28%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--signal) 28%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--signal) 56%,var(--surface))"></i><span>Rise</span></div><p class="cs2">Moves as reported at the open on 19 November, before Anthropic began trading</p></div>
+<p>One view, from <span class="co-name">Needham</span>, puts a $150 target on it, betting on very fast growth and very high margins. The opposite view says 80 times forward revenue already prices in a great deal. Indian investors rushed in through GIFT City, the offshore finance zone in Gujarat, where bank approvals took days. Uday <span class="co-name">Kotak</span> noted it is worth more than India's top 10 companies combined, which set off a debate on why India funds so little deep research.</p>
+
+<h3>The chip door to China closes</h3>
+<p>US rules that took effect on 19 November close a gap that let Chinese firms rent advanced American chips in foreign data centres or have them made through independent packaging firms. <span class="co-name">TSMC</span> and <span class="co-name">Samsung</span> paused some China orders made on 16 nm or smaller.</p>
+<ul class="pts">
+<li class="dn"><b><span class="co-name">Datasection</span></b> — a Japanese cloud firm that served <span class="co-name">Tencent</span> cut its revenue forecast by 89% and hit its lower limit.</li>
+<li class="dn"><b><span class="co-name">Moonshot AI</span></b> — cancelled a $150 million deal to rent <span class="co-name">Nvidia</span> chips in Indonesia after paying 50% upfront.</li>
+<li class="am"><b><span class="co-name">Alibaba</span></b> — may cut its 20 GW data-centre target and lean on its own chips; its AI cloud revenue still grew 53%.</li>
+<li><b>Winners in China</b> — <span class="co-name">DeepSeek</span> and <span class="co-name">Zhipu</span> built their own home-grown chip base and are least affected.</li>
+</ul>
+<p>Reading between the lines, there are now too many AI chips chasing too little legal demand. So rental prices for <span class="co-name">Nvidia</span>'s B300 chips should fall, and some chips will be smuggled rather than unused.</p>
+
+<h3>Demand still beats supply</h3>
+<p>Chip makers say they cannot make enough. <span class="co-name">AMD</span>'s chief says demand stays far above supply even with the rules; <span class="co-name">Qualcomm</span> says wafers, substrates and assembly are all short; <span class="co-name">Intel</span> says "I just cannot supply enough"; <span class="co-name">Samsung</span> says neoclouds are only about 8% of the market.</p>
+<div class="bars">
+<p class="bt">Google Gemini 4 Neon against rivals on an automation test, % score</p>
+<div class="bar"><span class="bl">Gemini 4 Neon</span><span class="bw"><span class="bf" style="width:100%"></span></span><span class="bv">56.3%</span></div>
+<div class="bar"><span class="bl">Claude Opus 5.5</span><span class="bw"><span class="bf alt" style="width:75%"></span></span><span class="bv">42.5%</span></div>
+<div class="bar"><span class="bl">GPT-6.2 Sol</span><span class="bw"><span class="bf alt" style="width:73%"></span></span><span class="bv">41.3%</span></div>
+<p class="cs2">AutomationBench scores as published by Google and cited in the material</p>
+</div>
+<p>Software buyers moved too. Cyber security shares jumped after a US official said hackers are using AI to scale attacks, and <span class="co-name">Palo Alto Networks</span> raised its yearly guide and agreed to buy <span class="co-name">Applied Compute</span> for $4.5 billion.</p>
+<div class="heat"><p class="ht">US cyber security shares before Palo Alto results, 18 November, % change</p><div class="hg"><div class="t u4"><b>Qualys</b><span>+10.80%</span></div><div class="t u4"><b>Okta</b><span>+9.20%</span></div><div class="t u4"><b>SentinelOne</b><span>+9.10%</span></div><div class="t u3"><b>CrowdStrike</b><span>+7.60%</span></div><div class="t u3"><b>Palo Alto</b><span>+7.30%</span></div><div class="t u3"><b>Zscaler</b><span>+6.30%</span></div><div class="t u3"><b>Cloudflare</b><span>+6.20%</span></div><div class="t u3"><b>Fortinet</b><span>+6.10%</span></div></div><div class="hk"><span>Fall</span><i style="background:color-mix(in srgb,var(--flag) 56%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--flag) 28%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--signal) 28%,var(--surface))"></i><i style="background:color-mix(in srgb,var(--signal) 56%,var(--surface))"></i><span>Rise</span></div><p class="cs2">Moves as reported on 18 November</p></div>
+<p>So the AI story has split. Chip and security spending is real and growing, while the financing around it (loans to small cloud firms, chip-backed debt) is getting harder. Section 09 covers that credit risk.</p>
+</div>
+</section>
+<section id="s09">
+<div class="sec-head"><span class="num">09</span><h2>Risks and problems: what could go wrong from here</h2></div>
+<p class="deck">The warning signs in the material, grouped by where the damage would land first.</p>
+<div class="body">
+<div class="short"><span class="sl">In short</span><ul>
+<li>The biggest risk is higher rates in both the US and India while the rally rests on foreign money.</li>
+<li>AI lending is getting harder, and the Fed itself flagged hidden AI debt.</li>
+<li>Several Indian companies showed accounting or cash problems that investors should not ignore.</li>
+</ul></div>
+
+<h3>The main risks at a glance</h3>
+<div class="tw"><table><caption>Risks raised in the material, and what to watch</caption>
+<thead><tr><th>Risk</th><th>What happened</th><th>Who gets hurt first</th><th>What to watch</th></tr></thead>
+<tbody>
+<tr><td class="lab">Higher rates</td><td>Fed set for a December rise; India's inflation at 6.09%; Goldman sees repo at 6.25%</td><td>Borrowers, finance companies, builders, small caps</td><td>US jobs data; India CPI on 14 December</td></tr>
+<tr><td class="lab">Flows reverse</td><td>Foreign funds bought cash shares but hold 68% of futures bets on a fall</td><td>Large caps, rupee</td><td>FII futures long-short ratio</td></tr>
+<tr><td class="lab">AI credit stress</td><td>Banks selling data-centre loans; JPMorgan selling Qualtrics debt at 80 cents</td><td>Small cloud firms, chip makers, their lenders</td><td>Loan prices, Nvidia financing deals</td></tr>
+<tr><td class="lab">War in the Gulf</td><td>Tankers hit; US weighs new strikes on Iran; Houthis hit Riyadh</td><td>Oil importers, airlines, paint and chemical firms</td><td>Hormuz flows, tanker losses</td></tr>
+<tr><td class="lab">Drought</td><td>Rural stress in Karnataka and Maharashtra</td><td>Micro-lenders, tractors, rural consumer firms</td><td>Loan collections in Q3</td></tr>
+<tr><td class="lab">China export curbs</td><td>New rules on batteries, solar tools, drone parts, magnets</td><td>Indian assemblers of EVs, panels, drones</td><td>The 10 January battery deadline</td></tr>
+<tr><td class="lab">Policy flips</td><td>UPI fee delayed again; bulk Scotch duty benefit reversed; SEBI eyes caps on margin-funded buying</td><td>Fintechs, liquor makers, brokers</td><td>Any rollout date for the UPI fee</td></tr>
+</tbody></table></div>
+
+<h3>Problem 1: cheap money is over</h3>
+<p>Fed officials see the AI building boom itself as a source of inflation, and a few warned that long-run inflation expectations could slip loose after 5 years of high prices. In India, food inflation is near 9%. One view says India's cheaper oil will cool inflation fast. The opposite view says food, not fuel, is driving it, and rain shortfalls make that worse.</p>
+
+<h3>Problem 2: the AI debt pile</h3>
+<p>Fed officials said AI-related debt has grown fast through "complex and opaque" deals, and that circular financing and off-balance-sheet leases could magnify losses if returns disappoint. Signs of strain are already visible.</p>
+<ul class="pts">
+<li class="dn"><b>Bank loans</b> — ING and Société Générale are trying to sell up to $800 million of data-centre loans, some tied to <span class="co-name">Oracle</span>'s projects.</li>
+<li class="dn"><b>Software debt</b> — banks have been stuck with over $5 billion of <span class="co-name">Qualtrics</span> acquisition debt since March.</li>
+<li class="dn"><b>Hedge fund</b> — <span class="co-name">Situational Awareness</span> fell from over $20 billion to a rescue by <span class="co-name">Citadel</span>, and is now seeking leverage again.</li>
+<li class="dn"><b>Neoclouds</b> — <span class="co-name">Apollo</span>'s chief warned many small cloud firms could lose access to capital without guarantees.</li>
+</ul>
+
+<h3>Problem 3: accounting and governance flags</h3>
+<p>Several Indian companies showed that reported numbers can change, or do not match cash.</p>
+<ul class="pts">
+<li class="dn"><b><span class="co-name">Kaynes Technology</span></b> — a new auditor restated its books; FY26 debt rose 59% to ₹1,394 crore and some sales were booked too early. <span class="co-name">Macquarie</span> cut its target to ₹2,800.</li>
+<li class="dn"><b><span class="co-name">OSEL Devices</span></b> — an analyst said profit, cash and a new ₹21 crore intangible asset did not match its cash-flow statement.</li>
+<li class="dn"><b>DEE Development</b> — the auditor qualified its review over ₹50.6 crore of power assets not tested for impairment; operating cash was negative in H1.</li>
+<li class="am"><b><span class="co-name">Watrana Rentals</span></b> — this SME issue bought 642 machines from a promoter firm without a formal agreement; staff turnover was 87% last year.</li>
+<li class="am"><b><span class="co-name">Laurus Labs</span></b> — critics question low interest costs on high debt; supporters say this is noise.</li>
+<li class="am"><b>Promoter selling</b> — <span class="co-name">Happy Forgings</span> and <span class="co-name">Flair Writing</span> promoters sold; Laurus and Pricol fell when promoters sold, while <span class="co-name">Azad Engineering</span> rose because strong funds bought.</li>
+</ul>
+
+<h3>Problem 4: SpiceJet near the edge</h3>
+<p><span class="co-name">SpiceJet</span> is flying fewer than a quarter of its approved daily flights, still selling tickets, and owes ₹850 crore in unpaid statutory dues. Its board approved raising up to ₹5,500 crore, and executives warned it may have to stop flying within a week without new money.</p>
+<div class="cols">
+<p class="ct">Share of flights cancelled, % (SpiceJet in red, industry in ochre)</p>
+<div class="cg">
+<div class="c"><span class="cv">8.6</span><span class="cb neg" style="height:41%"></span></div>
+<div class="c"><span class="cv">0.6</span><span class="cb alt" style="height:3%"></span></div>
+<div class="c"><span class="cv">20.8</span><span class="cb neg" style="height:100%"></span></div>
+<div class="c"><span class="cv">1.0</span><span class="cb alt" style="height:5%"></span></div>
+<div class="c"><span class="cv">20.3</span><span class="cb neg" style="height:98%"></span></div>
+<div class="c"><span class="cv">1.2</span><span class="cb alt" style="height:6%"></span></div>
+</div>
+<div class="cx"><span>Jul SJ</span><span>Jul all</span><span>Aug SJ</span><span>Aug all</span><span>Sep SJ</span><span>Sep all</span></div>
+<p class="cs2">Aviation regulator data cited in the material</p>
+</div>
+<p>Yet the stock rose about 19% in 5 days on fundraising hopes. The regulator has only issued a show-cause notice, while in 2012 it stopped forward bookings at <span class="co-name">SpiceJet</span> and Kingfisher. So passengers, travel agents and lessors carry the risk, not the regulator.</p>
+
+<h3>Problem 5: cyber attacks and outages</h3>
+<p>Attacks hit the European Commission, vendors to <span class="co-name">JPMorgan</span>, and Norway's <span class="co-name">Equinor</span>, and a ransomware group reportedly hacked <span class="co-name">Nvidia</span>. US officials also warned that a rush to fix software bugs found by AI may be behind a wave of outages at critical systems.</p>
+
+<h3>Problem 6: froth in new issues</h3>
+<p>India has seen 108 share sales this year raising about ₹1.58 lakh crore, and big funds are now backing small SME listings. One view says that is healthy, since serious money is studying small firms. The opposite view says a rush of issues near the end of a rally, with weak breadth underneath, usually marks a top for smaller shares.</p>
+<p>Reading between the lines, most of these risks point the same way: they hurt smaller, more indebted and more rate-sensitive companies first. So the large-cap rally and the small-cap slump may both continue, until either rates fall or the foreign money stops.</p>
+</div>
+</section>
+<section id="s10">
+<div class="sec-head"><span class="num">10</span><h2>Open arguments, and the odd and surprising</h2></div>
+<p class="deck">The disagreements worth keeping open, both sides of each, and how to settle them.</p>
+<div class="body">
+<div class="short"><span class="sl">In short</span><ul>
+<li>The biggest open question is whether the foreign buying of Indian shares will last.</li>
+<li>Investors also disagree on AI, gold, oil, banks and IT services.</li>
+<li>Some of the day's news was strange enough to list on its own.</li>
+</ul></div>
+
+<h3>Will the foreign buying of Indian shares last?</h3>
+<div class="tw"><table><caption>The biggest question, both sides</caption>
+<thead><tr><th>Yes</th><th>No</th></tr></thead>
+<tbody>
+<tr><td>India has little AI risk, so it is a hiding place while tech is sold.</td><td>Foreign funds still hold 68% of index futures bets on a fall.</td></tr>
+<tr><td>Cheaper oil and metals lift Indian margins and the rupee.</td><td>US rates near 5% and a December Fed rise pull money back to the US.</td></tr>
+<tr><td>Goldman Sachs upgraded India; foreigners are far below normal weight after 26 months of selling.</td><td>India's inflation is above 6% and the RBI may raise rates 0.75% more.</td></tr>
+<tr><td>Bank profits are at records with very low bad loans.</td><td>The buying is narrow, in big banks and car makers, while local funds sell.</td></tr>
+</tbody></table></div>
+<p>How to settle it: watch the futures long-short ratio. If foreign funds cut their bets on a fall while still buying cash shares, the flow is real; if the ratio stays near 32:68, part of the buying is a hedged trade.</p>
+
+<h3>Other open questions</h3>
+<div class="tw"><table><caption>Disagreements in the material</caption>
+<thead><tr><th>Question</th><th>One side says</th><th>The other side says</th><th>What to watch</th></tr></thead>
+<tbody>
+<tr><td class="lab">Is the AI boom over?</td><td>Funds cut tech most since 2006; 52% expect Big Tech to cut spending</td><td>AI spending tops $1 trillion a year; chip makers cannot meet demand</td><td>Big Tech spending plans in January</td></tr>
+<tr><td class="lab">Should Nvidia rehire Huang?</td><td>He ran suppliers and customers personally; shareholders want him</td><td>The board accepted his resignation; results show the business holds</td><td>The permanent chief chosen</td></tr>
+<tr><td class="lab">Is oil oversupplied?</td><td>Record US output, rising stocks, an IEA surplus</td><td>Near-month spreads did not weaken; stocks are very low</td><td>Brent spreads, Hormuz flows</td></tr>
+<tr><td class="lab">State or private banks?</td><td>State banks gain first from repo-linked loans</td><td>Bernstein: private banks win on deposits; new loss rules hit state banks</td><td>Credit costs after April 2027</td></tr>
+<tr><td class="lab">Is IT's AI price cut one-off?</td><td>A one-time reset, then growth returns</td><td>A 2-3% drag every year</td><td>Large-cap growth above 5% for several quarters</td></tr>
+<tr><td class="lab">Can NSE break MCX?</td><td>Expiry shift tripled NSE's share</td><td>MCX still has about 97% of energy options</td><td>Market share at monthly expiries</td></tr>
+<tr><td class="lab">Is Anthropic fairly priced?</td><td>A rare, dominant growth firm; $150 target</td><td>80 times forward revenue prices in a lot</td><td>Its first quarterly results</td></tr>
+<tr><td class="lab">Are Iran's chemical weapons real?</td><td>Israel's chiefs warned Washington</td><td>No evidence shown; looks like building consent for war</td><td>Any independent evidence</td></tr>
+</tbody></table></div>
+<ul class="pts">
+<li class="am"><b>Gold</b> — forced selling by investors hurt by AI losses, or the start of a longer fall as real rates rise?</li>
+<li class="am"><b>Cement</b> — demand is strong and output rose 10%, but November price rises failed and makers plan ₹75,000 crore of new capacity.</li>
+<li class="am"><b>Rupee</b> — too strong next year, as the chief economic adviser says, or still fragile with a one-year-high trade deficit?</li>
+<li class="am"><b><span class="co-name">Anthropic</span> and India</b> — a sign India is undervalued, or a category error comparing an AI bet with steady old firms?</li>
+</ul>
+
+<h3>The odd and surprising</h3>
+<ul class="pts">
+<li><b>Rhenium in gold</b> — smugglers are mixing rhenium dust, a rare jet-engine metal, into gold jewellery to add weight; scanners miss it, and the dust sells at nearly 10 times jet-engine grade.</li>
+<li><b>Bigger than India's top 10</b> — <span class="co-name">Anthropic</span>'s value at listing, about $1.5 trillion, exceeds India's 10 largest companies combined.</li>
+<li><b><span class="co-name">Nvidia</span>'s farewell</b> — its first all-hands without Huang took no staff questions, a co-founder choked up, and it closed with "I Won't Back Down".</li>
+<li><b>Paid half, then walked</b> — <span class="co-name">Moonshot AI</span> cancelled a chip rental after agreeing to pay 50% upfront, against the usual 15%.</li>
+<li><b><span class="co-name">SpiceJet</span> rally</b> — the stock rose about 19% in a week in which it cancelled most flights and a lessor ended its contract.</li>
+<li><b>MIT in an SME</b> — the Massachusetts Institute of Technology was an anchor investor in a small Indian equipment-rental share sale.</li>
+<li><b>Gold after a plea</b> — gold is down 20% since the prime minister urged Indians to avoid needless gold buying.</li>
+<li><b>Data leak</b> — 15 officials were sacked over leaking investment information from 1 state to Andhra Pradesh.</li>
+<li><b>Silver crash</b> — silver per kg in India fell from ₹4,20,000 in January to about ₹1,68,000.</li>
+<li><b>AI film flop</b> — China's first fully AI-made feature film failed at the box office despite a large budget.</li>
+<li><b>Leverage again</b> — a fund that needed a summer rescue after AI bets went wrong is talking to banks about borrowing again.</li>
+<li><b>Gas trading</b> — <span class="co-name">NSE</span> briefly took over half of India's natural gas options on an expiry day, a first.</li>
+<li><b>GTA VI</b> — the game launched to "greatest ever" reviews, and PlayStation reported launch problems on day one.</li>
+<li><b>A ninth fail</b> — the Pentagon failed its financial audit for the 9th year in a row.</li>
+</ul>
+</div>
+</section>
+<section id="s11">
+<div class="sec-head"><span class="num">11</span><h2>Every company named, and why</h2></div>
+<p class="deck">The full list of companies in this issue, grouped by sector, each with the fact that brought it up.</p>
+<div class="body">
+<div class="note">
+  <p><strong>Note on this list.</strong> These companies appear here because they were discussed or mentioned in the market conversation over the past 24 hours — that is the only reason any of them is on this page. Appearing here is not a view on the company or on its shares.</p>
+</div>
+<div class="tw"><table><caption>Companies named in this issue, grouped by sector</caption><thead><tr><th>Company</th><th>Why it came up</th></tr></thead><tbody><tr class="grp"><td colspan="2">Energy, oil and metals</td></tr><tr><td class="co">JSW Steel</td><td>Goldman Sachs kept a buy with a ₹1,545 target, citing capacity growth and Indian steel prices 35% higher than a year ago; it shows ferrous metals holding up as copper and aluminium fall.</td></tr><tr><td class="co">Jindal Stainless, Shyam Metalics, Jindal Steel</td><td>Goldman Sachs named them among ferrous metal buys for the second half, on better spreads, volume growth and cash flow despite higher coking coal costs.</td></tr><tr><td class="co">Tata Steel</td><td>Named among metal shares that fell as metals sold off on AI spending worries, higher yields and a 19-month high in the dollar.</td></tr><tr><td class="co">Vedanta, Hindalco, NALCO</td><td>Emkay prefers Vedanta in aluminium, sees limited upside in Hindalco and likes NALCO least; a new anti-dumping probe on aluminium imports helps all 3.</td></tr><tr><td class="co">Hindustan Zinc</td><td>Listed as a loser from the silver crash, since silver is a large profit source; silver is about 61% below its January high.</td></tr><tr><td class="co">Godawari Power &amp; Ispat</td><td>Its Ari Dongri mine is expected to supply its own iron ore in FY28, which should cut raw material costs.</td></tr><tr><td class="co">Coal India, Mahanadi Coalfields</td><td>Coal India&#x27;s subsidiary Mahanadi Coalfields opened its share sale; coal and mining are expected to bring about ₹80,000 crore in FY27 asset sales.</td></tr><tr><td class="co">NLC India, NLC India Renewables</td><td>NLC India Renewables filed for a ₹3,300 crore fresh share sale with 1,784 MW running; NLC India signed a 275 MW battery storage project in Gujarat.</td></tr><tr><td class="co">Confidence Petroleum</td><td>Revenue rose 127% to ₹2,235 crore and profit 3.4 times to ₹69 crore; first-half profit already beats all of FY26, though debt and working capital rose.</td></tr><tr><td class="co">Hindustan Oil Exploration (HOEC)</td><td>Rose about 5% after the government eased rules for extending oil and gas production contracts.</td></tr><tr><td class="co">Reliance Industries</td><td>Plans ₹15,000 crore for 100 biogas plants by 2030; 1 of its Chinese battery partners pulled out as China curbs technology transfer.</td></tr><tr><td class="co">Equinor, Chevron</td><td>Norway&#x27;s Equinor said a cyber attack was ongoing but output normal; Iraq fast-tracked Chevron&#x27;s takeover of a field holding 14 billion barrels.</td></tr><tr><td class="co">Gujarat Fluorochemicals</td><td>Closed the week at about ₹4,979 after touching ₹5,000, a record, cited as a strong chemicals name holding up in a weak small-cap market.</td></tr><tr><td class="co">Balaji Amines</td><td>Told a TV channel it may list its speciality chemicals arm separately and reward shareholders, expecting business to normalise in 2 quarters.</td></tr><tr><td class="co">Supreme Petrochem</td><td>Approved a ₹450 crore second ABS plastics line with Versalis, adding 70,000 tonnes a year by December 2028.</td></tr><tr><td class="co">Tinna Rubber</td><td>Jumped about 19.6% to ₹990 on 19 November; its plan targets ₹1,000 crore revenue by 2029 from ₹546 crore.</td></tr><tr class="grp"><td colspan="2">Power equipment, engineering and logistics</td></tr><tr><td class="co">Quality Power Electrical Equipments</td><td>Order book above ₹2,000 crore; buying WS brings 765 kV insulator designs made by only 2 global suppliers; targets 50% growth in FY28 and rose about 5%.</td></tr><tr><td class="co">Hindusthan Insulators</td><td>Operating margin rose from 5.7% to 43.6% in a year on scarce high-voltage insulators, with revenue up 147%; governance flags keep its valuation low.</td></tr><tr><td class="co">Shilchar Technologies, Olectra Greentech</td><td>Margins halved below 220 kV: Shilchar from 33% to 16% and Olectra&#x27;s polymer insulators from 39% to 24%, showing the lower-voltage grid is no longer short.</td></tr><tr><td class="co">Cummins India</td><td>Profit fell 27% as raw materials rose and old contracts held prices; the stock fell 16% in 2 weeks though 17 of 22 analysts stay bullish.</td></tr><tr><td class="co">DEE Development Engineers</td><td>Margin rose to 20.1% but it must bill ₹913 crore in H2 to hit guidance; the auditor qualified its review over ₹50.6 crore of assets.</td></tr><tr><td class="co">GMM Pfaudler</td><td>Booked a record ₹1,198 crore of orders, up 36%, finished German job cuts and received about ₹150 crore of peptide equipment orders.</td></tr><tr><td class="co">Gala Precision Engineering</td><td>Orders rose 44% to over ₹100 crore in a quarter; it is winning safety springs from a German supplier and guides 20-25% growth.</td></tr><tr><td class="co">Jash Engineering</td><td>Its Indian parent earns a 13% profit margin, but overseas units must turn profitable to lift group margin from 14% to its 20% target.</td></tr><tr><td class="co">Sigma Advanced Systems</td><td>Spark Capital raised its target to ₹1,212; its order book of over ₹10,000 crore is about 5 times FY27 revenue and it plans a ₹3,000 crore raise.</td></tr><tr><td class="co">Titagarh Rail Systems</td><td>Passenger revenue rose 146% to ₹300 crore; won 4,955 wagons worth about ₹1,700 crore; plans 200 metro cars in FY27.</td></tr><tr><td class="co">Texmaco Rail &amp; Engineering</td><td>South Africa locomotive orders reached ₹5,300 crore and exports are now 54% of its order book; management said the tipping point has come.</td></tr><tr><td class="co">Ramkrishna Forgings</td><td>Its forged-wheel venture with Titagarh can make 2.28 lakh wheels a year and targets 80,000 in FY28.</td></tr><tr><td class="co">Diamond Power Infrastructure</td><td>Plans to cut Adani&#x27;s share of its order book from 43% to about 20% as it wins more outside orders.</td></tr><tr><td class="co">Adani Group, Adani Enterprises</td><td>Jefferies notes a planned ₹2-2.2 lakh crore yearly capex to FY31 with leverage below 3.5 times; its finance chief called the Anthropic-India comparison a category error.</td></tr><tr><td class="co">Larsen &amp; Toubro, BEL, Dynamatic Technologies</td><td>L&amp;T leads 1 of 3 teams, with BEL and Dynamatic, bidding for India&#x27;s ₹15,000 crore AMCA stealth-fighter prototype contract.</td></tr><tr><td class="co">Bharat Forge, BEML, Data Patterns</td><td>Bharat Forge leads another AMCA bid with BEML and Data Patterns; the winner is due within a month.</td></tr><tr><td class="co">Tata Advanced Systems</td><td>Leads the third AMCA team, with BEL and Dynamatic, in the private-led fighter programme.</td></tr><tr><td class="co">Garden Reach Shipbuilders</td><td>Revenue rose 8.9% to ₹1,827 crore and profit 11.8% to ₹172 crore; it is expanding to build 32 vessels at once.</td></tr><tr><td class="co">Israel Aerospace Industries</td><td>Signed a ₹1,976 crore contract to upgrade the Barak ship-defence missiles of the Indian Navy.</td></tr><tr><td class="co">Tonbo Imaging</td><td>Won a ₹35.62 crore defence ministry order for thermal weapon sights.</td></tr><tr><td class="co">Dilip Buildcon, Ashoka Buildcon</td><td>Dilip Buildcon received a ₹419 crore Gurugram Metro order; Ashoka Buildcon rose 6% on a ₹1,465 crore highway order.</td></tr><tr><td class="co">GPT Infraprojects, NBCC, Viviana Power Tech</td><td>GPT emerged lowest bidder for a ₹121 crore railway order, NBCC won ₹84.87 crore of university work, and Viviana a ₹124 crore power distribution contract.</td></tr><tr><td class="co">Blue Dart Express</td><td>Beat estimates with revenue up 14% and profit up 28%; Emkay kept an add rating with a ₹5,450 target.</td></tr><tr><td class="co">Watrana Rentals</td><td>This SME equipment-rental issue raises ₹120 crore at ₹245; anchors included MIT, Old Bridge and SageOne, but it bought 642 machines from a promoter firm.</td></tr><tr><td class="co">Neetu Yoshi</td><td>Half-year income rose 29% to ₹59 crore; started a Haridwar plant and won about ₹17 crore of railway orders.</td></tr><tr><td class="co">Orient Green Power</td><td>A tribunal ordered release of ₹12.98 crore of withheld wind power payments to its unit Beta Wind Farm.</td></tr><tr><td class="co">NHPC</td><td>Settled a Parbati-III dam claim for ₹42.62 crore against ₹256 crore sought, clearing a contingent liability.</td></tr><tr><td class="co">ACME Solar</td><td>Rose about 2% on a 150 MW power purchase agreement with NTPC.</td></tr><tr><td class="co">EMMVEE Energy, IB Solar</td><td>Both turned to German machine makers for new solar cell lines as China proposed curbs on 12 solar technologies.</td></tr><tr class="grp"><td colspan="2">Electronics, semiconductors and IT</td></tr><tr><td class="co">Kaynes Technology</td><td>A new auditor restated its books: FY26 debt rose 59% to ₹1,394 crore and some revenue was booked early; Macquarie cut its target to ₹2,800.</td></tr><tr><td class="co">Kaynes Semicon, Mitsui, AOI Electronics</td><td>Their Sanand chip packaging plant is in commercial production and eyes a $1 billion expansion, part of Japan&#x27;s growing role in India&#x27;s chip chain.</td></tr><tr><td class="co">Micron Technology</td><td>Its Sanand plant now shows up in customs data exporting memory chips, mostly to Malaysia; Micron also rose 5.8% as an Anthropic supplier.</td></tr><tr><td class="co">Tata Electronics, Tokyo Electron, Renesas, CG Semi, ROHM</td><td>Named as Japan-India chip links: Tokyo Electron with Tata at Dholera, Renesas with CG Semi and ROHM with Tata in packaging.</td></tr><tr><td class="co">Cyient Semiconductors</td><td>Received $10 million from GlobalFoundries at a $510 million valuation to grow custom chip design.</td></tr><tr><td class="co">Centum Electronics</td><td>Doubled in price; its ₹1,950 crore order book is 49% higher-margin build-to-spec work.</td></tr><tr><td class="co">PG Electroplast, Syrma SGS</td><td>PG Electroplast was bought by 8 of 27 small-cap fund houses in October and Syrma SGS by 6, the strongest agreement among buyers.</td></tr><tr><td class="co">TCS, Infosys, Wipro, HCLTech, Tech Mahindra</td><td>Grew 0.6% to 7.2% in constant currency; HCLTech sees 2-3% yearly AI price cuts, and TCS now trades near 17 times earnings from 31.</td></tr><tr><td class="co">Persistent Systems, Coforge, eClerx</td><td>Named as specialists still compounding; Persistent grew 20.8% in constant currency while large peers stalled.</td></tr><tr><td class="co">Tata Technologies</td><td>Investor day targets 15-20% yearly dollar growth to FY30 and a 20% margin; revenue rose 28% last quarter.</td></tr><tr><td class="co">Cognizant</td><td>Won a £133 million, 7-year data-centre contract from UK Network Rail, beating HCLTech, TCS, DXC and Atos.</td></tr><tr><td class="co">Aurionpro Solutions</td><td>Won an extra ₹100 crore order from a global hyperscaler for a data-centre project in southern India.</td></tr><tr><td class="co">Sterlite Technologies</td><td>Down about 40% from its peak, cited as a lesson in using stop-losses.</td></tr><tr><td class="co">Smartworks, IndiQube, Awfis, WeWork India</td><td>Flexible office firms growing on GCC demand; Smartworks raised its growth guide to 35%, though AI may change future office needs.</td></tr><tr><td class="co">Sarvam AI</td><td>Defended serving foreign AI models on its platform, saying it runs on privately bought GPUs.</td></tr><tr class="grp"><td colspan="2">Bearings, auto and auto parts</td></tr><tr><td class="co">Maruti Suzuki</td><td>Rose 7.30% on 19 November, the top Nifty gainer, as copper and aluminium fell and car makers&#x27; costs eased.</td></tr><tr><td class="co">Eicher Motors, Mahindra &amp; Mahindra, TVS Motor</td><td>Gained 3-5% as metal prices fell; Nifty Auto is up about 11% in November, its best since November 2020.</td></tr><tr><td class="co">Tata Motors Passenger Vehicles</td><td>Rose about 4% with the car pack on lower metal input costs.</td></tr><tr><td class="co">Ather Energy, FIEM Industries</td><td>Ather is up 5 times since listing and outsold Ola Electric; FIEM supplies lights for its new Konarc scooter and earned ₹149 crore in H1.</td></tr><tr><td class="co">Ola Electric</td><td>Reversed its no-dealer stance, now runs 319 dealer stores, lost ₹362 crore last quarter and its cash nearly halved.</td></tr><tr><td class="co">Honda Motorcycle &amp; Scooter India</td><td>Plans ₹2,420 crore for 2 new lines, lifting capacity to about 8 million vehicles a year by 2028.</td></tr><tr><td class="co">Mahindra Last Mile Mobility</td><td>Targets 1 million EV sales by FY31, is weighing exports to Africa and South-East Asia, and may list in about 18 months.</td></tr><tr><td class="co">Steel Strips Wheels</td><td>Warned as trading at peak multiples on peak sales, since parts makers may have to pass on cheaper metal costs.</td></tr><tr><td class="co">NRB Bearings</td><td>Told investors to stop looking at profit after tax while it invests in capacity and technology.</td></tr><tr><td class="co">Sansera Engineering</td><td>Trading above ₹4,660, where 1 long-term holder trimmed but did not sell.</td></tr><tr><td class="co">Azad Engineering</td><td>Promoters sold, while Valuequest funds and Norges Bank bought at ₹2,286; the stock rose, showing the buyer matters as much as the seller.</td></tr><tr><td class="co">NDR Auto Components</td><td>Rose about 8% on a 51% venture with Korea&#x27;s DYA to make full car seats.</td></tr><tr><td class="co">Kia, Hyundai, Toyota, BYD, Ford, CATL</td><td>Kia plans a $2 billion second Indian plant and Hyundai $15.5 billion to 2032; Toyota and BYD described Chinese competition; Ford started making CATL-design batteries in Michigan.</td></tr><tr><td class="co">Tesla, SpaceX</td><td>Musk said Tesla will build a 6-7 seat Model Y without a steering wheel; SpaceX plans over 1 GW of AI computing a month by 2027.</td></tr><tr class="grp"><td colspan="2">Defence and aerospace</td></tr><tr><td class="co">IndiGo, Embraer, Airbus</td><td>IndiGo is reportedly in talks with Embraer for smaller E2 jets to serve smaller cities, and is adding daily Delhi-Kuala Lumpur flights.</td></tr><tr><td class="co">SpiceJet</td><td>Flying about 15 of 66 approved daily flights with ₹850 crore of unpaid dues; approved a ₹5,500 crore raise and still rose 19% in 5 days.</td></tr><tr><td class="co">VyomIC, SpacePixxel, KaleidEO, Azista Industries</td><td>Won space agency grants: VyomIC ₹12.55 crore for an atomic clock, and the other 3 ₹1.46 crore for 3D city mapping.</td></tr><tr><td class="co">Okulo Aerospace, Yaanendriya, Airbound</td><td>Drone start-ups pushing to make flight controllers and sensors at home, as China tightened drone part exports from 18 November.</td></tr><tr><td class="co">Mogami frigates (Mitsubishi design)</td><td>India is studying Japan&#x27;s Mogami frigates, but they rely on American systems the Navy does not use, so the deal may stall.</td></tr><tr class="grp"><td colspan="2">Financials and markets</td></tr><tr><td class="co">ICICI Bank, HDFC Bank, Axis Bank, Kotak Mahindra Bank, State Bank of India</td><td>The 5 largest flexicap fund holdings; ICICI&#x27;s house view is 2 more rate rises, and HDFC Bank&#x27;s new chief is trying to fix branch culture.</td></tr><tr><td class="co">Bank of Maharashtra, Bank of Baroda, PNB, Canara Bank</td><td>State banks at record highs on repo-linked lending; Canara estimates ₹12,000-15,000 crore for new expected-loss rules from April 2027.</td></tr><tr><td class="co">City Union Bank</td><td>Bought by 7 of 27 small-cap fund houses in October.</td></tr><tr><td class="co">CreditAccess Grameen, Arman Financial</td><td>Micro-lenders at their lowest-ever price to book value; CreditAccess sees drought stress in 6 Maharashtra districts and fell about 6%.</td></tr><tr><td class="co">Equitas Small Finance Bank</td><td>Plans to seek a universal bank licence next year after a permanent chief is named; only 3% of loans sit in drought areas.</td></tr><tr><td class="co">AU Small Finance Bank, Ujjivan Small Finance Bank</td><td>AU is the only small finance bank so far allowed to become a universal bank; Ujjivan&#x27;s application was returned in April.</td></tr><tr><td class="co">Muthoot Finance, Manappuram Finance</td><td>Fell up to 4-5.5% as gold hit a 14-month low, cutting the value of the collateral behind their loans.</td></tr><tr><td class="co">IIFL Capital Services</td><td>FIH Mauritius bought 4.40 crore shares at ₹350 from promoters including Nirmal Jain, about ₹154 crore.</td></tr><tr><td class="co">IIFL Finance, Fairfax, Blackstone, IDBI Bank</td><td>Fairfax is selling its 13.25% of IIFL Finance to help fund buying 60.72% of IDBI Bank; Blackstone is putting ₹5,000 crore into IIFL.</td></tr><tr><td class="co">NSE, MCX, BSE</td><td>NSE tripled its energy options share and rose 18% in November; UBS raised its MCX target to ₹4,500; BSE enters commodity options in December.</td></tr><tr><td class="co">Angel One</td><td>Fell up to 3% with BSE as SEBI considers capping margin-funded buying at 5-10% of a stock&#x27;s free float.</td></tr><tr><td class="co">Paytm, Pine Labs, MobiKwik</td><td>Lost over $1 billion of value together as the UPI merchant fee was delayed again; Paytm&#x27;s Singapore unit will invest up to ₹200 crore with Funding Societies.</td></tr><tr><td class="co">PB Fintech (Policybazaar)</td><td>Co-founder Alok Bansal will step down as executive vice chairman from March 2027 and stay as a non-executive director.</td></tr><tr><td class="co">Navi, CRED</td><td>Navi passed CRED to become 4th in UPI payments by value for the first time in 5 years.</td></tr><tr><td class="co">IREDA</td><td>Asked about as a possible budget rally candidate.</td></tr><tr><td class="co">Old Bridge, Helios, PPFAS, SageOne</td><td>Fund houses whose moves were the subject: Old Bridge added ICICI Bank and ITC and joined an SME anchor book with SageOne.</td></tr><tr><td class="co">Medi Assist, Greenlam, Ratnaveer Precision, Black Box</td><td>Block and bulk deals: Wasatch sold Medi Assist; Akash Bhansali bought Greenlam, which rose 10%; Infinite Derivatives bought Ratnaveer; Quant MF bought Black Box.</td></tr><tr class="grp"><td colspan="2">Consumer, retail and services</td></tr><tr><td class="co">Eternal (Blinkit)</td><td>Blinkit has 3.7 crore monthly buyers and is choosing loyal, profitable customers over discount seekers; Eternal was sold by 4 small-cap fund houses.</td></tr><tr><td class="co">Pidilite Industries</td><td>Raising Fevicol prices 5-7% from 1 December with raw materials stable; the stock rose 3.37%.</td></tr><tr><td class="co">Havells India</td><td>Promoters bought about 30 lakh shares in November; its Lloyd AC margins gain as copper and aluminium cool.</td></tr><tr><td class="co">Voltas, Blue Star</td><td>Rose about 3% each as copper hit a 7-month low; Equirus sees AC margin recovery from the 4th quarter.</td></tr><tr><td class="co">Polycab, KEI Industries, Apar Industries</td><td>Cable makers have fallen back to about 2022 valuations as copper swings, stocks clear and new rivals enter.</td></tr><tr><td class="co">Titan, Kalyan Jewellers, Senco Gold, Sky Gold, Thangamayil</td><td>Fell 1.8-5.3% as gold slid; Senco said a ₹30-40 crore robbery at a Bihar franchise has no impact on it; Sky Gold approved a ₹1,800 crore raise.</td></tr><tr><td class="co">Parag Milk Foods</td><td>Revenue up 23% and margin up despite 15% costlier milk; paneer capacity to rise 4 times by June 2027.</td></tr><tr><td class="co">Dodla Dairy, Heritage Foods, Hatsun Agro</td><td>Dairy results were weak for some: Dodla&#x27;s profit fell 44% and Heritage&#x27;s about 39%.</td></tr><tr><td class="co">Urban Company</td><td>Near its record high after approving a ₹2,500 crore raise; its InstaHelp service cut losses per order from ₹760 to ₹279.</td></tr><tr><td class="co">Snabbit, Pronto</td><td>Venture-backed home-help rivals that Urban Company is fighting with InstaHelp; Snabbit does about 64.5 lakh orders a quarter.</td></tr><tr><td class="co">PVR INOX</td><td>Building cheaper cinemas in small towns; Kotak expects its best-ever quarter, and CRISIL raised its outlook to positive.</td></tr><tr><td class="co">PhysicsWallah</td><td>Targets ₹9,000-10,000 crore revenue by FY30 at over 20% margin, slowing offline centres to 20-30 a year.</td></tr><tr><td class="co">Nike</td><td>Wants to triple its India business in 5 years, with a cricket focus and a locally made running shoe.</td></tr><tr><td class="co">Style Union (Nexon Omniverse), Boba Bhai</td><td>Style Union raised ₹485 crore at about ₹7,500-8,000 crore value; Boba Bhai raised $18 million.</td></tr><tr><td class="co">Aurum PropTech</td><td>Took Housing.com in an all-stock deal; its promoter stake fell from 48% to 38% and it is betting on home loans.</td></tr><tr><td class="co">ITC, Nestle India, Varun Beverages, Marico, HUL, Tata Consumer, GCPL, Colgate, Dabur, Radico Khaitan</td><td>Brokers turned positive on consumer staples at about 5-year average valuations, helped by cheaper crude.</td></tr><tr><td class="co">Trent, V-Mart, Vishal Mega Mart, Nykaa, Lenskart</td><td>Named as preferred retail and consumer-tech picks, though retail margins may be pressured in the second half.</td></tr><tr><td class="co">Allied Blenders, United Spirits, Tilaknagar, Radico Khaitan</td><td>Under pressure after reports that the India-UK trade pact benefit on bulk Scotch imports was reversed.</td></tr><tr><td class="co">Indian Hotels, Leela, Zee, Sun TV, Prime Focus, Saregama, Tips</td><td>Named among consumer and media names with positive commentary and volume-led buying.</td></tr><tr><td class="co">Walmart, Flipkart</td><td>Walmart raised its yearly sales guide to 4.9-5.2%; Flipkart&#x27;s sale timing cut international growth by about 5 points this quarter.</td></tr><tr><td class="co">Shadowfax</td><td>Grew revenue 57% with margin rising to 6.7%, and hit a record high after first falling on results.</td></tr><tr><td class="co">LT Foods</td><td>Bought the owner of the US brand Maya Kaimal for $5.8 million.</td></tr><tr><td class="co">Indo Count, Welspun Living, Himatsingka, Trident, Vardhman, KPR Mill, Gokaldas, SP Apparels</td><td>Textile makers split between full spinners and home-textile firms with idle looms; Indo Count&#x27;s revenue rose 57.5%.</td></tr><tr class="grp"><td colspan="2">Pharmaceuticals and chemicals</td></tr><tr><td class="co">Kopran</td><td>Carbapenem antibiotics are 67% of its API sales, which rose to ₹123 crore last quarter.</td></tr><tr><td class="co">Dishman Carbogen Amcis</td><td>Holds orders through FY28 to supply parts of 2 AstraZeneca-Daiichi cancer drugs.</td></tr><tr><td class="co">IOL Chemicals</td><td>Expects strong ibuprofen, paracetamol and metformin demand for 4-6 quarters as Europe depends on imports.</td></tr><tr><td class="co">Kwality Pharma</td><td>Guided ₹950-1,000 crore revenue for FY28, a year early, and keeps hitting record highs.</td></tr><tr><td class="co">Laurus Labs, Sai Life Sciences</td><td>JP Morgan is bullish on both as contract makers, while critics question Laurus&#x27;s low interest cost on high debt.</td></tr><tr><td class="co">Amanta Healthcare</td><td>A third IV-bottle line reaches full rate from 20 November; the stock is up 40% since results at about 50 times earnings.</td></tr><tr><td class="co">Panacea Biotec</td><td>Has approvals in the UK and Africa and a profit-sharing deal with Apotex for the cancer drug paclitaxel.</td></tr><tr><td class="co">Viyash</td><td>Its animal-health sales in Turkey, Brazil and Mexico grew 39%.</td></tr><tr><td class="co">Caplin Point</td><td>Fell 7% after a US FDA &quot;official action indicated&quot; finding at its sterile unit.</td></tr><tr><td class="co">Biocon</td><td>Won EU approval for a pertuzumab biosimilar, its 5th cancer biosimilar in the EU or US.</td></tr><tr><td class="co">Syngene</td><td>A long-term holder said its core business survived past problems and should be judged on the business, not near-term numbers.</td></tr><tr><td class="co">KIMS (Krishna Institute)</td><td>Quoted ₹5 lakh for a surgery priced at ₹1.5 lakh elsewhere, raising questions on hospital pricing; also sold by 4 fund houses.</td></tr><tr class="grp"><td colspan="2">SME and small listings</td></tr><tr><td class="co">KDDL</td><td>Rose from about ₹2,800 to ₹4,800, cited as a relative-strength winner.</td></tr><tr><td class="co">OSEL Devices</td><td>An analyst said profit, cash and a new ₹21 crore intangible asset did not match its cash-flow statement.</td></tr><tr><td class="co">Avana, Hoac Foods, Tipco, Praruh</td><td>Small listings 1 analyst said he has stopped tracking.</td></tr><tr><td class="co">Shankesh Jewellers, Baazar Style, SC Agro, Capricorn</td><td>Saw bulk deals on 19 November, including a ₹15.77 crore purchase in Shankesh Jewellers.</td></tr><tr><td class="co">Happy Forgings, Flair Writing, Gallantt Ispat, La Opala RG, Studds, Kilburn Engineering</td><td>Promoters sold Happy Forgings and Flair Writing, and bought the other 4.</td></tr><tr><td class="co">KAMA Holdings, SRF</td><td>KAMA&#x27;s board meets on 20 November to consider a buyback while SRF&#x27;s promoters have been selling.</td></tr><tr><td class="co">East India Drums, Vectras, Virtual Galaxy, Aptech, Ameya Precision</td><td>Small orders: ₹33.99 crore from Indian Oil, ₹13.93 crore from GAIL, and smaller contracts.</td></tr><tr class="grp"><td colspan="2">Global technology and AI</td></tr><tr><td class="co">Nvidia</td><td>Revenue doubled to $115.8 billion, but Jensen Huang left as chief; the board refuses to rehire him and a $500 billion financing plan has lent nothing.</td></tr><tr><td class="co">Anthropic</td><td>Raised about $81 billion at $83 a share, the largest listing ever, valued near $1.5 trillion; Amazon and Google each own more than the founders.</td></tr><tr><td class="co">Amazon, Google (Alphabet), Microsoft, Broadcom, AMD, Salesforce</td><td>Rose at the open as Anthropic investors or suppliers; Google launched Gemini 4 Neon and Microsoft will use Intel packaging.</td></tr><tr><td class="co">OpenAI</td><td>Its model rewrote chip circuit designs for AMD with up to 14% gains; its top researchers use about $23,000 of AI tokens a day.</td></tr><tr><td class="co">Intel</td><td>Signed its first outside 18A chip customer at 70% yield; its chief said &quot;I just cannot supply enough&quot;.</td></tr><tr><td class="co">TSMC, Samsung</td><td>Paused some China chip orders under new US rules; Samsung said AI demand is real and planned a large buyback.</td></tr><tr><td class="co">Qualcomm, Arm</td><td>Qualcomm said wafers and substrates are all short; Arm&#x27;s chief was approached in Nvidia&#x27;s CEO search.</td></tr><tr><td class="co">Palo Alto Networks, Applied Compute</td><td>Palo Alto beat estimates, raised its guide and is buying Applied Compute for $4.5 billion in stock.</td></tr><tr><td class="co">CrowdStrike, Okta, Qualys, SentinelOne, Zscaler, Cloudflare, Fortinet</td><td>Cyber security shares rose 6-11% after a US warning that hackers use AI to scale attacks.</td></tr><tr><td class="co">Alibaba, Tencent, ByteDance, Moonshot AI, DeepSeek, Zhipu</td><td>US curbs on renting chips abroad hurt Alibaba, Tencent, ByteDance and Moonshot most; DeepSeek and Zhipu built home-grown capacity.</td></tr><tr><td class="co">Datasection</td><td>A Japanese cloud firm that served Tencent cut its revenue forecast by 89% after the US rule change.</td></tr><tr><td class="co">CoreWeave, TeraWulf</td><td>CoreWeave&#x27;s co-founder bought $30 million of its bonds; TeraWulf insisted it is an energy firm, not a cloud start-up.</td></tr><tr><td class="co">Dell, ServiceNow, Everpure</td><td>Dell added 3,300 AI factory customers in 3 quarters; ServiceNow said seats are still growing; Everpure raised guidance on 51% growth.</td></tr><tr><td class="co">Qualtrics, Oracle</td><td>JPMorgan is selling Qualtrics debt at about 80 cents; banks are selling data-centre loans linked to Oracle projects.</td></tr><tr><td class="co">Take-Two Interactive</td><td>Launched GTA VI with pre-orders far above plan and expects net bookings to rise 90-99% next quarter.</td></tr><tr><td class="co">UnitedHealth, Humana</td><td>Fell 10% and 13% after Medicare proposed clawing back overpayments to its private plans back to 2018.</td></tr><tr><td class="co">PDD, Williams-Sonoma, Bath &amp; Body Works, NetEase, Coherent</td><td>Mixed US-listed results: PDD beat on profit, NetEase fell 6%, and Coherent announced a $2 billion buyback.</td></tr><tr><td class="co">Cantor Fitzgerald</td><td>Denied it held a large Nvidia position as Democrats probe whether a blacklisting was delayed to protect it.</td></tr><tr class="grp"><td colspan="2">Private firms and deal targets</td></tr><tr><td class="co">Situational Awareness</td><td>A hedge fund that needed a Citadel rescue after AI bets went wrong is now seeking leverage again; it holds about $5 billion of Anthropic.</td></tr><tr><td class="co">Mandrake Bio</td><td>A Bengaluru start-up that won a global protein design contest and is entering a new one with Anthropic and Adaptyv.</td></tr><tr><td class="co">Linq, Netlify, CodeRabbit, Kong</td><td>AI software firms that launched or raised money: Linq $90 million, Netlify expects $130 million recurring revenue.</td></tr><tr><td class="co">Simple Energy, River, Ultraviolette, Yulu, Zeno</td><td>Electric two-wheeler start-ups raising money after Ather&#x27;s rise; Simple raised $180 million and Zeno is seeking $35-40 million.</td></tr><tr><td class="co">Dassault Systemes</td><td>Targets $1 billion of India revenue and gets 25% of new customers from university incubators.</td></tr><tr><td class="co">Zurich Insurance</td><td>Will grow its Hyderabad centre to about 1,000 staff by mid-2028 for AI and cyber insurance.</td></tr><tr><td class="co">Fab2</td><td>A US chip start-up founded by Sam Zeloof and Jim Keller raised $500 million at a $3.7 billion value.</td></tr></tbody></table></div>
+<h3>Other corporate actions noted in exchange filings</h3>
+<p>A preferential issue is when a company sells new shares or warrants to chosen buyers, usually promoters or funds, at a set price, instead of to the public. It raises money fast but reduces existing holders' share.</p>
+<div class="tw"><table><caption>Preferential issues, rights issues and fundraise approvals</caption><thead><tr><th>Company</th><th>Size</th><th>Price and buyers</th></tr></thead><tbody><tr><td class="lab">DEE Development Engineers</td><td class="n">₹300 crore</td><td>Raised through a preferential issue; helped cut finance costs</td></tr><tr><td class="lab">Sky Gold &amp; Diamonds</td><td class="n">Up to ₹1,800 crore</td><td>Board approved a fundraise; route and buyers not stated</td></tr><tr><td class="lab">SpiceJet</td><td class="n">Up to ₹5,500 crore</td><td>Board approved; mix of instruments and buyers not yet disclosed</td></tr><tr><td class="lab">Urban Company</td><td class="n">₹2,500 crore</td><td>Fundraise approved; route not stated</td></tr><tr><td class="lab">Aurum PropTech</td><td class="n">₹88.5 crore unpaid</td><td>Warrants at about ₹231 still to be paid up</td></tr><tr><td class="lab">Ola Electric</td><td class="n">₹1,000 crore</td><td>Rights issue; about ₹600 crore received so far</td></tr></tbody></table></div>
+<p class="lead">Share sales, listings and bonds</p>
+<ul class="pts">
+<li><b><span class="co-name">Mahanadi Coalfields</span></b> — <span class="co-name">Coal India</span>'s unit opened its share sale.</li>
+<li><b><span class="co-name">NLC India Renewables</span></b> — filed for a ₹3,300 crore fresh issue plus an offer for sale of up to 10 crore shares.</li>
+<li><b><span class="co-name">Watrana Rentals</span></b> — SME issue of ₹120 crore at ₹245; anchor book of about ₹34 crore.</li>
+<li><b>Embassy Developments</b> — board meets on 21 November to consider raising money through debentures.</li>
+</ul>
+<p class="lead">Deals, stakes and mergers</p>
+<ul class="pts">
+<li><b><span class="co-name">Infosys</span></b> — its Singapore arm signed a joint venture with NTT DOCOMO.</li>
+<li><b><span class="co-name">Paytm</span></b> — about ₹162 crore for 19.1% of CardUp in Singapore.</li>
+<li><b><span class="co-name">Fairfax</span></b> — selling 13.25% of <span class="co-name">IIFL Finance</span> as it buys control of <span class="co-name">IDBI Bank</span>.</li>
+<li><b><span class="co-name">Palo Alto Networks</span></b> — buying <span class="co-name">Applied Compute</span> for $4.5 billion in shares.</li>
+</ul>
+<p class="lead">Block and bulk deals</p>
+<ul class="pts">
+<li><b><span class="co-name">IIFL Capital Services</span></b> — FIH Mauritius bought about ₹154 crore from promoters at ₹350.</li>
+<li><b><span class="co-name">Azad Engineering</span></b> — Valuequest funds and Norges Bank bought from the promoter at about ₹2,286.</li>
+<li><b><span class="co-name">Greenlam</span></b> — Akash Bhansali bought in a block; the stock rose about 10%.</li>
+<li><b>Havells</b> — promoter QRG Investments bought about 30.8 lakh shares in the open market from 6 to 13 November.</li>
+</ul>
+<p class="lead">Ratings, approvals and bad news</p>
+<ul class="pts">
+<li class="dn"><b><span class="co-name">Nvidia</span></b> — <span class="co-name">Moody's</span> cut its outlook to stable from positive.</li>
+<li><b>Texmaco Rail</b> — CRISIL upgraded its rating from A to A+.</li>
+<li><b><span class="co-name">PVR INOX</span></b> — CRISIL changed its outlook to positive.</li>
+<li class="dn"><b><span class="co-name">Caplin Point</span></b> — US FDA "official action indicated" status for its sterile unit.</li>
+<li class="dn"><b>DEE Development</b> — qualified limited review over ₹50.6 crore of assets.</li>
+</ul>
+</div>
+</section>
+</div></div><div class="foot"><p>Reported facts and analysis are woven together here rather than separated into boxes. Where a conclusion is drawn across sources — a connection no single source stated on its own — the sentence says so with words like "so", "which means" or "the reason is". Figures are as reported by the sources being summarised and have not been independently audited, except where checked against official data and noted as such in the text.</p></div><div class="disclaimer">
+  <div class="dh">
+    <span>Please read this before you use anything above</span>
+  </div>
+  <p><strong>This is a daily educational newsletter written for one small group of readers, nothing more.</strong> It is not research sold to anybody, it is not a service and it is not a product. Nothing here is a recommendation to buy, sell or hold anything, and where something is labelled bullish, bearish or mixed that describes the mood of the material that was read rather than a view on the company or advice to you. Please keep it private and do not forward, post, publish or quote it outside the group. It is generated with the help of AI, so numbers can be misread and an original source can simply be wrong. If anything looks out of place, check it yourself before acting on it, and speak to a registered adviser before making any financial decision.</p>
+</div>
+</div>
+<script>
+(function () {
+  var root = document.documentElement,
+      btn  = document.getElementById('themetog'),
+      KEY  = 'ngid-theme';
+
+  function read()  { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function write(v){ try { localStorage.setItem(KEY, v); }    catch (e) {} }
+
+  var saved = read();
+  if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+
+  var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+  function current() {
+    var set = root.getAttribute('data-theme');
+    if (set === 'dark' || set === 'light') return set;
+    return (mq && mq.matches) ? 'dark' : 'light';
+  }
+
+  function paint() {
+    var now = current();
+    btn.setAttribute('data-mode', now);
+    btn.setAttribute('aria-label',
+      now === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    btn.setAttribute('title',
+      now === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+  }
+
+  btn.addEventListener('click', function () {
+    var next = current() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    write(next);
+    paint();
+  });
+
+  if (mq) {
+    var onSys = function () { if (!read()) paint(); };
+    if (mq.addEventListener) mq.addEventListener('change', onSys);
+    else if (mq.addListener) mq.addListener(onSys);
+  }
+
+  paint();
+})();
+</script>
+<script>(function(){var l=document.querySelectorAll('.toc a');var m={};l.forEach(function(a){m[a.getAttribute('href').slice(1)]=a});
+var o=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){l.forEach(function(a){a.classList.remove('on')});var a=m[x.target.id];if(a)a.classList.add('on')}})},{rootMargin:'-10% 0px -70% 0px'});
+document.querySelectorAll('section[id]').forEach(function(s){o.observe(s)})})();</script>
+</body>
+</html>
